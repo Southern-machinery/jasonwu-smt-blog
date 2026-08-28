@@ -1269,7 +1269,7 @@ export const back_home = /** @type {(inputs: Back_HomeInputs) => LocalizedString
 };
 
 export const blog_description = /** @type {(inputs: Blog_DescriptionInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`关于 01MVP 博客模板、Cloudflare 原生存储、Markdown 发布和自动化工作流的文章。`)
+	return /** @type {LocalizedString} */ (`Jason Wu 的产线笔记——30 余年 THT 自动插装一线经验。文章涵盖定制 SMT/THT 设备、异形件供料、波峰焊与备件方案，帮助 EMS 工厂打造面向未来、高性价比的生产线。`)
 };
 
 export const blog_eyebrow = /** @type {(inputs: Blog_EyebrowInputs) => LocalizedString} */ () => {
@@ -1305,7 +1305,7 @@ export const blog_series_filter_label = /** @type {(inputs: Blog_Series_Filter_L
 };
 
 export const blog_title = /** @type {(inputs: Blog_TitleInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`长期可用的发布笔记`)
+	return /** @type {LocalizedString} */ (`用 SMT & THT 自动化，为产线提速`)
 };
 
 export const comment_body = /** @type {(inputs: Comment_BodyInputs) => LocalizedString} */ () => {

@@ -1269,7 +1269,7 @@ export const back_home = /** @type {(inputs: Back_HomeInputs) => LocalizedString
 };
 
 export const blog_description = /** @type {(inputs: Blog_DescriptionInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Articles about the 01MVP blog template, Cloudflare-native storage, Markdown publishing, and automation workflows.`)
+	return /** @type {LocalizedString} */ (`Field notes from Jason Wu — 30+ years of hands-on THT auto insertion experience. Articles on custom-designed SMT & THT machines, odd-form feeding, wave soldering, and spare parts for future-proof, cost-effective EMS production lines.`)
 };
 
 export const blog_eyebrow = /** @type {(inputs: Blog_EyebrowInputs) => LocalizedString} */ () => {
@@ -1305,7 +1305,7 @@ export const blog_series_filter_label = /** @type {(inputs: Blog_Series_Filter_L
 };
 
 export const blog_title = /** @type {(inputs: Blog_TitleInputs) => LocalizedString} */ () => {
-	return /** @type {LocalizedString} */ (`Durable publishing notes`)
+	return /** @type {LocalizedString} */ (`Streamline Your Workflow with SMT & THT Automation`)
 };
 
 export const comment_body = /** @type {(inputs: Comment_BodyInputs) => LocalizedString} */ () => {
