@@ -1,13 +1,15 @@
-# 01mvp-blog-starter
+# Jason Wu · SMT/THT Automation Blog (jasonwu-smt-blog)
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/01MVP/blog-starter)
-[![Cloudflare deploy](https://github.com/01MVP/blog-starter/actions/workflows/cloudflare-deploy.yml/badge.svg)](https://github.com/01MVP/blog-starter/actions/workflows/cloudflare-deploy.yml)
+Personal marketing site and blog for **Jason Wu, Founder & CEO of Southern Machinery (Shenzhen)** — SMT/THT PCB assembly automation solutions for EMS factories: auto insertion, odd-form feeding, wave soldering, custom feeders, and field support.
 
-[中文 README](./README.zh-CN.md)
+Built on [01mvp-blog-starter](https://github.com/01MVP/blog-starter), a Cloudflare-native personal publishing system. This fork adds:
 
-01mvp-blog-starter is a Cloudflare-native personal publishing system with a Git-managed documentation system.
+- Jason Wu brand: header logo (Southern Machinery), footer call-to-action block (social matrix, catalog, machine photos, info@smthelp.com, WhatsApp), and the Chatwoot support widget fixed bottom-right on every page.
+- A landing page structured with the Hook → Diagnosis → Framework → Vehicle → Loop → CTA method, plus click-to-load YouTube demos and catalog/manual links from file.autoinsertion.com.
+- Git-managed blog content: `content/posts/*.md` (English bodies with Chinese titles/excerpts) seeded into D1 with `node scripts/seed-jasonwu-blog.mjs` — it writes `output/jasonwu-blog/posts.sql`; add `--apply-local` or `--apply-remote` to execute through wrangler.
+- Real machine photos self-hosted under `apps/web/public/images/` (ph.smthelp.com file URLs currently 404, so pages use local copies; the header logo loads the ph.smthelp.com URL with a local fallback).
 
-It ships with two content surfaces:
+The starter keeps two content surfaces:
 
 - `/blog` is powered by the publishing backend for posts, admin writing, comments, RSS, OpenAPI publishing, imports, exports, and backups.
 - `/docs` is powered by Fumadocs and GitHub Markdown/MDX for product docs, developer docs, API guides, and template notes.
