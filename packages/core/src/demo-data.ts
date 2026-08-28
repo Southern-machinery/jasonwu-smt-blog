@@ -1,24 +1,32 @@
 import type { Asset, Comment, Post, Series, SiteSettings, Tag } from "./types";
 
 export const siteSettings: SiteSettings = {
-  name: "01MVP Blog Starter",
+  name: "Jason Wu · Southern Machinery",
   description:
-    "A Cloudflare-native personal site for articles, videos, durable notes, and API-assisted publishing.",
-  url: "https://your-domain.example",
-  authorName: "01MVP",
+    "Jason Wu helps EMS factories take through-hole off the bottleneck list: SMT/THT PCB assembly automation, auto insertion machines, wave soldering, custom feeders, and hands-on field support from Shenzhen.",
+  url: "https://jasonwu.smthelp.eu",
+  authorName: "Jason Wu",
   authorBio:
-    "Builder notes, product essays, and durable personal knowledge on an edge-native publishing stack.",
-  avatarUrl: "/og-default.svg",
+    "Founder & CEO of Southern Machinery (Shenzhen, since 2011). 30+ years in SMT/THT equipment — on the line, on the phone, and on video with EMS teams across 4 continents.",
+  avatarUrl: "/images/jason-wu-avatar.svg",
   defaultOgImage: "/og-default.svg",
   socialLinks: [
-    { label: "GitHub", href: "https://github.com/01mvp/blog-starter" },
+    { label: "LinkedIn Company", href: "https://www.linkedin.com/company/smtmachine" },
+    { label: "LinkedIn Profile", href: "https://cn.linkedin.com/in/smtsupplier" },
+    { label: "Twitter", href: "https://twitter.com/smtspecialist" },
+    { label: "Facebook", href: "https://www.facebook.com/autoinsertion" },
+    { label: "YouTube Channel", href: "https://www.youtube.com/c/Smthelping" },
+    { label: "Catalog", href: "https://file.autoinsertion.com" },
+    { label: "Machine Photos", href: "https://ph.smthelp.com" },
+    { label: "Email", href: "mailto:info@smthelp.com" },
+    { label: "WhatsApp", href: "https://wa.me/8613602562576" },
     { label: "RSS", href: "/rss.xml" },
   ],
   navigation: [
-    { label: "Demo", href: "/demo", i18n: { label: { zh: "博客 Demo" } } },
-    { label: "Docs", href: "/docs", i18n: { label: { zh: "文档" } } },
-    { label: "Articles", href: "/blog", i18n: { label: { zh: "文章" } } },
+    { label: "Blog", href: "/blog", i18n: { label: { zh: "博客" } } },
     { label: "About", href: "/about", i18n: { label: { zh: "关于" } } },
+    { label: "Contact", href: "/#contact", i18n: { label: { zh: "联系" } } },
+    { label: "YouTube", href: "https://www.youtube.com/c/Smthelping" },
   ],
   rssEnabled: true,
   commentsEnabled: true,
@@ -37,273 +45,298 @@ export const siteSettings: SiteSettings = {
   locales: ["en", "zh"],
   primaryLanguage: "en",
   i18n: {
+    name: { zh: "Jason Wu · 南部机械" },
     description: {
-      zh: "基于 Cloudflare 的个人站点，用来沉淀文章、视频、长期笔记和 API 辅助发布工作流。",
+      zh: "Jason Wu 帮助 EMS 工厂把通孔插装从瓶颈变成优势：SMT/THT PCB 组装自动化、自动插件机、波峰焊、定制飞达，以及来自深圳的现场与远程技术支持。",
     },
     authorBio: {
-      zh: "基于边缘原生发布栈记录构建笔记、产品文章和长期可沉淀的个人知识。",
+      zh: "南部机械创始人兼 CEO（深圳，2011 年至今），深耕 SMT/THT 设备 30 余年——产线现场、电话会议、视频连线，服务四大洲的 EMS 团队。",
     },
   },
 };
 
 export const tags: Tag[] = [
   {
-    id: "tag-cloudflare",
-    name: "Cloudflare",
-    slug: "cloudflare",
-    description: "Workers, D1, R2, Turnstile, and edge deployment notes.",
+    id: "tag-auto-insertion",
+    name: "Auto Insertion",
+    slug: "auto-insertion",
+    description: "Radial, axial, pin/eyelet and terminal insertion machines for THT lines.",
     i18n: {
-      name: { zh: "Cloudflare" },
-      description: { zh: "Workers、D1、R2、Turnstile 和边缘部署笔记。" },
+      name: { zh: "自动插件" },
+      description: { zh: "立式、卧式、PIN 眼与端子自动插装设备。" },
     },
   },
   {
-    id: "tag-publishing",
-    name: "Publishing",
-    slug: "publishing",
-    description: "Content workflows for writing, publishing, importing, and exporting.",
+    id: "tag-odd-form",
+    name: "Odd-Form Components",
+    slug: "odd-form-components",
+    description: "Feeding and inserting connectors, transformers, relays and other odd-form parts.",
     i18n: {
-      name: { zh: "内容管理" },
-      description: { zh: "覆盖写作、发布、导入和导出的内容工作流。" },
+      name: { zh: "异形元件" },
+      description: { zh: "连接器、变压器、继电器等异形元件的供料与插装。" },
     },
   },
   {
-    id: "tag-ai",
-    name: "API Automation",
-    slug: "api-automation",
-    description: "OpenAPI workflows for repeatable publishing and site maintenance.",
+    id: "tag-wave-soldering",
+    name: "Wave Soldering",
+    slug: "wave-soldering",
+    description: "Wave solder machines, titanium fingers, flux nozzles, conveyors and pallets.",
     i18n: {
-      name: { zh: "API 自动化" },
-      description: { zh: "用于发布和站点维护的 OpenAPI 工作流。" },
+      name: { zh: "波峰焊" },
+      description: { zh: "波峰焊设备、钛爪、喷雾 nozzle、接驳台与治具。" },
     },
   },
   {
-    id: "tag-markdown",
-    name: "Markdown",
-    slug: "markdown",
-    description: "Markdown-first authoring with rendered HTML, search text, and portable exports.",
+    id: "tag-spare-parts",
+    name: "Spare Parts & Feeders",
+    slug: "spare-parts-feeders",
+    description: "Custom feeders, nozzles and consumables integrated with major machine brands.",
     i18n: {
-      name: { zh: "Markdown" },
-      description: { zh: "以 Markdown 为核心的写作、HTML 渲染、搜索文本和可迁移导出。" },
+      name: { zh: "备件与飞达" },
+      description: { zh: "兼容主流设备品牌的定制飞达、吸嘴与耗材。" },
+    },
+  },
+  {
+    id: "tag-material-handling",
+    name: "Material Handling",
+    slug: "material-handling",
+    description: "AGV trolleys, magazine loaders/unloaders and ESD handling for PCB lines.",
+    i18n: {
+      name: { zh: "物料转运" },
+      description: { zh: "AGV 小车、PCB 起盘/上板机与防静电转运方案。" },
+    },
+  },
+  {
+    id: "tag-field-service",
+    name: "Field Service",
+    slug: "field-service",
+    description: "Install, commission, train, troubleshoot — lessons from the factory floor.",
+    i18n: {
+      name: { zh: "现场服务" },
+      description: { zh: "安装、调试、培训与排障——来自产线一线的经验。" },
     },
   },
 ];
 
 export const series: Series[] = [
   {
-    id: "series-publishing-stack",
-    name: "Publishing Stack",
-    slug: "publishing-stack",
-    description: "Long-running notes on the blog engine, storage model, and publishing workflow.",
+    id: "series-manual-to-automated",
+    name: "Manual to Automated",
+    slug: "manual-to-automated",
+    description: "A practical roadmap for moving through-hole insertion from hands to machines.",
     sortOrder: 10,
     i18n: {
-      name: { zh: "发布栈" },
-      description: { zh: "围绕博客引擎、存储模型和发布工作流的长期笔记。" },
+      name: { zh: "从手工到自动" },
+      description: { zh: "把通孔插装从人手迁移到机器的务实路线图。" },
     },
   },
   {
-    id: "series-ai-workflow",
-    name: "AI Workflow",
-    slug: "ai-workflow",
-    description: "Automation flows for setup, content operations, and agent-friendly maintenance.",
+    id: "series-line-notes",
+    name: "Notes From the Line",
+    slug: "notes-from-the-line",
+    description: "Field stories, safety retrofits and spare-part fixes from real EMS factories.",
     sortOrder: 20,
     i18n: {
-      name: { zh: "AI 工作流" },
-      description: { zh: "面向初始化、内容运营和 Agent 维护的自动化流程。" },
+      name: { zh: "产线笔记" },
+      description: { zh: "来自真实 EMS 工厂的现场故事、安全改造与备件修复。" },
     },
   },
 ];
 
-const cloudflare = tags[0];
-const publishing = tags[1];
-const ai = tags[2];
-const markdown = tags[3];
-const publishingStack = series[0];
-const aiWorkflow = series[1];
+const insertion = tags[0];
+const oddForm = tags[1];
+const wave = tags[2];
+const spares = tags[3];
+const handling = tags[4];
+const field = tags[5];
+const manualToAuto = series[0];
+const lineNotes = series[1];
 
 export const posts: Post[] = [
   {
-    id: "post-edge-publishing",
-    title: "Designing a permanent personal publishing system on Cloudflare",
-    slug: "designing-a-permanent-personal-publishing-system-on-cloudflare",
+    id: "post-manual-insertion-tax",
+    title: "The most expensive sound on your PCB line is the silence of manual insertion",
+    slug: "manual-insertion-is-a-tax-you-forgot-you-were-paying",
     excerpt:
-      "The template stores canonical content in D1, keeps media and backup archives in R2, and exposes the same OpenAPI publishing surface to people and automation tools.",
-    coverImage: "/demo/desk.jpg",
-    contentMarkdown: `# Designing a permanent personal publishing system on Cloudflare
+      "Ten stations of operators placing radial parts one by one is not labor — it is a recurring tax on quality, capacity, and planning. Here is how to size the escape.",
+    coverImage: "/images/hero-insertion-line.jpg",
+    contentMarkdown: `# The most expensive sound on your PCB line is the silence of manual insertion
 
-01mvp-blog-starter treats the database as the source of truth and Markdown as the durable content format. Posts, comments, settings, and API tokens live in D1. Images, attachments, import packages, and backups live in R2.
+If you walk a manual through-hole area, everything looks calm. That is the trap. Manual insertion hides three costs at once: defect escapes, capacity ceilings, and wage inflation.
 
-The first release focuses on a reliable loop: sign in, write, upload, publish, render, comment, review, and export. Paid features such as email notifications stay optional so the free core remains usable.
+## What to count before you count machines
 
-## Core boundaries
+- Parts per board x boards per shift = insertion moves per shift.
+- Escape rate: one reversed polarity capacitor that survives to ICT costs 10x an insertion station's daily wage.
+- Changeover pain: every new product re-trains hands; a feeder re-loads in minutes.
 
-- D1 owns structured content.
-- R2 owns binary assets.
-- Markdown remains exportable.
-- HTML imports are sanitized before rendering.
-- API tokens use scoped permissions for OpenAPI automation.
+## The four-step migration
+
+1. Pick the single highest-volume radial or terminal step.
+2. Send us the component tape/reel samples and the PCB file.
+3. Watch a live demo run of your own parts on camera.
+4. Start with one inserter (S3000A/S3010A class), then extend to a multi-station line.
+
+No wrong parts, no wrong polarity, no hero operators required.
 `,
     contentHtml:
-      "<p>01mvp-blog-starter treats the database as the source of truth and Markdown as the durable content format.</p><p>The first release focuses on a reliable loop: sign in, write, upload, publish, render, comment, review, and export.</p>",
+      "<p>Manual insertion hides three costs at once: defect escapes, capacity ceilings, and wage inflation.</p><p>Count the moves, count the escapes, then migrate one station at a time with live demos of your own components.</p>",
     contentText:
-      "01mvp-blog-starter stores posts comments settings and API tokens in D1 and stores assets imports and backups in R2.",
+      "Manual through-hole insertion is a recurring tax on quality and capacity. Count insertion moves, escape cost, and changeover pain, then migrate step by step with demo runs of your own components.",
     status: "published",
     source: "editor",
     featured: true,
     pinned: true,
     commentsEnabled: true,
-    publishedAt: "2026-05-20T09:00:00.000Z",
-    updatedAt: "2026-05-22T12:20:00.000Z",
-    authorName: "01MVP",
-    series: publishingStack,
-    tags: [cloudflare, publishing, markdown],
-    seoTitle: "Designing a permanent personal publishing system on Cloudflare",
+    publishedAt: "2026-08-24T09:00:00.000Z",
+    updatedAt: "2026-08-24T09:00:00.000Z",
+    authorName: "Jason Wu",
+    series: manualToAuto,
+    tags: [insertion, oddForm],
+    seoTitle: "Manual to Auto Insertion: a 4-step migration plan for EMS lines",
     seoDescription:
-      "How 01mvp-blog-starter uses Cloudflare Workers, D1, R2, Markdown, and scoped automation for durable personal publishing.",
+      "How EMS factories calculate the true cost of manual through-hole insertion and migrate to auto insertion machines one station at a time.",
     i18n: {
-      title: { zh: "在 Cloudflare 上设计一个长期可用的个人发布系统" },
+      title: { zh: "PCB 产线上最贵的声音，是手工插件时的沉默" },
       excerpt: {
-        zh: "这个模板把标准内容存入 D1，把媒体和备份归档放进 R2，并向作者和自动化工具暴露同一套 OpenAPI 发布能力。",
-      },
-      contentMarkdown: {
-        zh: `# 在 Cloudflare 上设计一个长期可用的个人发布系统
-
-01mvp-blog-starter 把数据库视为事实来源，把 Markdown 视为长期可迁移的内容格式。文章、页面、评论、站点设置和 API Token 存在 D1，图片、附件、导入包和备份存在 R2。
-
-第一版聚焦一个可靠闭环：登录、写作、上传、发布、渲染、评论、审核和导出。邮件通知等付费能力保持可选，让免费核心能力依旧完整可用。
-
-## 核心边界
-
-- D1 负责结构化内容。
-- R2 负责二进制资源。
-- Markdown 始终可以导出。
-- HTML 导入会先清洗再渲染。
-- API Token 为 OpenAPI 自动化提供受限权限。
-`,
-      },
-      contentHtml: {
-        zh: "<p>01mvp-blog-starter 把数据库视为事实来源，把 Markdown 视为长期可迁移的内容格式。</p><p>第一版聚焦一个可靠闭环：登录、写作、上传、发布、渲染、评论、审核和导出。</p>",
-      },
-      contentText: {
-        zh: "01mvp-blog-starter 将文章、页面、评论、设置和 API Token 存入 D1，并将资源、导入包和备份存入 R2。",
-      },
-      seoTitle: { zh: "在 Cloudflare 上设计长期可用的个人发布系统" },
-      seoDescription: {
-        zh: "01mvp-blog-starter 如何使用 Cloudflare Workers、D1、R2、Markdown 和受限自动化能力支持长期个人发布。",
+        zh: "十个工位的人一颗一颗插立式元件不是人工，而是对品质、产能和排班的重复征税。这篇文章给出脱身的计算方法。",
       },
     },
   },
   {
-    id: "post-skill-runner",
-    title: "What a guided setup workflow should automate",
-    slug: "what-a-guided-setup-workflow-should-automate",
+    id: "post-odd-form-four-steps",
+    title: "Odd-form components: the four-level upgrade path from bowl to inline",
+    slug: "odd-form-components-four-level-upgrade-path",
     excerpt:
-      "A setup workflow should check local tooling, prepare Cloudflare resources, write site config, deploy the Worker, validate routes, and create the first post.",
-    coverImage: "/demo/notes.jpg",
-    contentMarkdown: `# What a guided setup workflow should automate
+      "Connectors, transformers and relays do not have to mean hand insertion. Bowl, belt, tube, tray, reel — each feeder level buys you speed and polarity control.",
+    coverImage: "/images/s7900-odd-form.jpg",
+    contentMarkdown: `# Odd-form components: the four-level upgrade path from bowl to inline
 
-A good setup workflow should remove repetitive deployment work without hiding the decisions a site owner needs to make.
+Odd-form parts kill automation projects because every engineer starts with the same question: "but my component is special." It is not that special. There is a feeding method for it.
 
-It should collect the site name, author, domain, theme, comments preference, and email preference. Then it checks Node, pnpm, Vite+, Wrangler, and Cloudflare auth state before preparing D1, R2, optional KV, and Turnstile resources.
+## Level 1 — Bulk + vision orientation
 
-Manual steps are reserved for login, token creation, paid-plan confirmation, DNS confirmation, and email verification.
+Loose parts in a bowl or vibratory feeder, camera checks polarity before insertion. Fast to start, best for simple geometries.
+
+## Level 2 — Taped and reel-packaged
+
+Re-taping odd-form parts (terminals, tact switches, big caps) unlocks the same pick-and-place-grade feeding speed. We build the taping tooling and the reel feeders.
+
+## Level 3 — Tray and tube feeders
+
+For transformers, sockets and pinned parts: stick/tube feeders (STF1003 class) and tray feeders keep damage rates near zero.
+
+## Level 4 — Dedicated inline inserter
+
+S7900-class machines combine several feeding levels in one inline cell with clinching and polarity verification.
+
+Send the drawing or a sample. We tell you which level your part lives at.
 `,
     contentHtml:
-      "<p>A good setup workflow should remove repetitive deployment work without hiding the decisions a site owner needs to make.</p><p>Manual steps are reserved for login, token creation, paid-plan confirmation, DNS confirmation, and email verification.</p>",
+      "<p>Odd-form parts are less special than they look: bowl, belt, tube, tray, reel — each feeding level buys speed and polarity control, and a dedicated inserter combines them inline.</p>",
     contentText:
-      "The setup workflow checks local tooling prepares Cloudflare resources writes config deploys validates and creates a first post.",
+      "A four-level roadmap for automating odd-form through-hole components, from vibratory bowls to taped reels, tube and tray feeders, and dedicated inline insertion cells.",
     status: "published",
-    source: "ai",
+    source: "editor",
     featured: true,
     pinned: false,
     commentsEnabled: true,
-    publishedAt: "2026-05-21T10:30:00.000Z",
-    updatedAt: "2026-05-21T10:30:00.000Z",
-    authorName: "01MVP",
-    series: aiWorkflow,
-    tags: [ai, cloudflare],
-    seoTitle: "Setup automation plan for 01mvp-blog-starter",
+    publishedAt: "2026-08-20T09:00:00.000Z",
+    updatedAt: "2026-08-20T09:00:00.000Z",
+    authorName: "Jason Wu",
+    series: manualToAuto,
+    tags: [oddForm, spares, insertion],
+    seoTitle: "Odd-form component insertion: bowl, reel, tube, tray, inline",
     seoDescription:
-      "A guided setup workflow can configure, deploy, validate, and maintain a Cloudflare-native blog.",
+      "The four-level feeding upgrade path for odd-form THT components — connectors, transformers, relays — with auto insertion machines.",
     i18n: {
-      title: { zh: "引导式初始化流程应该自动化哪些步骤" },
+      title: { zh: "异形元件：从振动盘到在线插装的四级升级路线" },
       excerpt: {
-        zh: "初始化流程应该检查本地工具、准备 Cloudflare 资源、写入站点配置、部署 Worker、验证路由并创建第一篇文章。",
-      },
-      contentMarkdown: {
-        zh: `# 引导式初始化流程应该自动化哪些步骤
-
-好的初始化流程应该减少重复部署工作，同时保留站点所有者需要做的关键选择。
-
-它需要收集站点名称、作者、域名、主题、评论偏好、邮件偏好和主语言，然后检查 Node、pnpm、Vite+、Wrangler 和 Cloudflare 登录状态，再准备 D1、R2、可选 KV 与 Turnstile 资源。
-
-人工步骤只保留给登录、Token 创建、付费计划确认、DNS 确认和邮件验证。
-`,
-      },
-      contentHtml: {
-        zh: "<p>好的初始化流程应该减少重复部署工作，同时保留站点所有者需要做的关键选择。</p><p>人工步骤只保留给登录、Token 创建、付费计划确认、DNS 确认和邮件验证。</p>",
-      },
-      contentText: {
-        zh: "初始化流程会检查本地工具、准备 Cloudflare 资源、写入配置、部署、验证并创建第一篇文章。",
-      },
-      seoTitle: { zh: "01mvp-blog-starter 的初始化自动化计划" },
-      seoDescription: {
-        zh: "引导式初始化流程可以配置、部署、验证并维护一个新的 Cloudflare 原生博客。",
+        zh: "连接器、变压器、继电器不等于手工插件。振动盘、编带、管装、托盘——每一级供料方式都在为你买来速度与极性控制。",
       },
     },
   },
   {
-    id: "post-import-export",
-    title: "A portable content model for Markdown, HTML, and ZIP backups",
-    slug: "portable-content-model-markdown-html-zip-backups",
+    id: "post-nr12-trolley",
+    title: "Brazil NR12 made us rebuild a JUKI RS-1 feeder trolley — twice",
+    slug: "brazil-nr12-juki-rs1-feeder-trolley-story",
     excerpt:
-      "Imports normalize Markdown, HTML, and bundled images into database records and R2 keys; exports produce a plain folder that other blog tools can read.",
-    coverImage: "/demo/garden.jpg",
-    contentMarkdown: `# A portable content model for Markdown, HTML, and ZIP backups
+      "A safety standard written for machinery became the best product spec we ever received. Here is how the ESD feeder trolley with safety finger survived certification thinking.",
+    coverImage: "/images/esd-magazine-rack.jpg",
+    contentMarkdown: `# Brazil NR12 made us rebuild a JUKI RS-1 feeder trolley — twice
 
-01mvp-blog-starter keeps export paths boring on purpose. A complete export contains posts, assets, comments, and site settings. Markdown stays readable by other static blogs.
+NR12 is Brazil's machinery safety regulation. When a Brazilian EMS plant asked whether our feeder trolleys for JUKI RS-1 machines could comply, we stopped selling carts and started engineering.
 
-HTML import has two modes: sanitized HTML for normal use and trusted iframe rendering for admin-only legacy content.
+## What the regulation forced us to see
+
+- Operator hands near moving feeders are the risk point — so the trolley geometry and safety finger had to keep the pinch zone covered during loading.
+- ESD discipline and mechanical safety are the same conversation: grounding path, stable castors, no sharp edges.
+- Documentation is part of the product: maintenance logs and safe work procedures ship with the trolley.
+
+## The result
+
+A trolley family that carries feeders, reels, and magazines safely, rolls on locked castors, and passes customer safety reviews in Brazil and beyond.
+
+Safety questions are design questions in disguise.
 `,
     contentHtml:
-      "<p>01mvp-blog-starter keeps export paths boring on purpose. A complete export contains posts, assets, comments, and site settings.</p>",
+      "<p>Brazil's NR12 safety regulation turned a simple feeder trolley into an engineered product: pinch-zone protection, ESD grounding, and documentation that ships with the cart.</p>",
     contentText:
-      "Imports normalize Markdown HTML and image ZIP bundles and exports produce portable Markdown HTML assets comments and settings.",
+      "How NR12 machinery safety rules shaped the design of ESD feeder trolleys and magazine racks for JUKI RS-1 SMT lines in Brazilian EMS factories.",
     status: "published",
-    source: "markdown_upload",
+    source: "editor",
     featured: false,
     pinned: false,
     commentsEnabled: true,
-    publishedAt: "2026-05-23T08:10:00.000Z",
-    updatedAt: "2026-05-23T08:10:00.000Z",
-    authorName: "01MVP",
-    series: publishingStack,
-    tags: [publishing, markdown],
-    seoTitle: "Portable Markdown, HTML, and ZIP backup model",
+    publishedAt: "2026-08-16T09:00:00.000Z",
+    updatedAt: "2026-08-16T09:00:00.000Z",
+    authorName: "Jason Wu",
+    series: lineNotes,
+    tags: [field, handling, spares],
+    seoTitle: "Brazil NR12 compliant feeder trolleys for JUKI RS-1 lines",
     seoDescription:
-      "A Cloudflare-native publishing model that imports Markdown and HTML and exports portable archives.",
+      "A field story of engineering NR12-ready ESD feeder trolleys and safety fingers for JUKI RS-1 placement machines.",
     i18n: {
-      title: { zh: "适配 Markdown、HTML 和 ZIP 备份的可迁移内容模型" },
+      title: { zh: "巴西 NR12 逼我们把 JUKI RS-1 飞达台车重做了两遍" },
       excerpt: {
-        zh: "导入流程会把 Markdown、HTML 和图片压缩包规范化为数据库记录与 R2 key；导出结果则是其他博客工具也能读取的普通文件夹。",
+        zh: "一份写给机械的安全法规，成了我们收到过的最好的产品需求说明书。看防静电飞达台车如何带着安全指手通过认证思维。",
       },
-      contentMarkdown: {
-        zh: `# 适配 Markdown、HTML 和 ZIP 备份的可迁移内容模型
+    },
+  },
+  {
+    id: "post-wave-fingers",
+    title: "The hidden margin in wave soldering is hiding inside your furnace",
+    slug: "wave-soldering-titanium-fingers-hidden-margin",
+    excerpt:
+      "Finger marks, warped pallets, and chain jitter quietly eat wave soldering yield. A field guide to the consumables nobody budgets for.",
+    coverImage: "/images/wave-soldering-line.jpg",
+    contentMarkdown: `# The hidden margin in wave soldering is hiding inside your furnace
 
-01mvp-blog-starter 刻意让导出路径保持简单。一次完整导出包含文章、资源、评论和站点设置，Markdown 依旧能被其他静态博客读取。
+The cheapest component in the furnace — the titanium fingers holding your pallets — touches every board you sell. Worn plating leaves marks, uneven grip warps pallets, and chain jitter shows up as intermittent bridging.
 
-HTML 导入提供两种模式：普通使用场景下的安全清洗 HTML，以及只在管理后台使用的可信 iframe 渲染。
+Treat consumables as process control: log finger condition at every PM, rotate pallets on schedule, and match replacements to the original drawing, not to a part number guess.
 `,
-      },
-      contentHtml: {
-        zh: "<p>01mvp-blog-starter 刻意让导出路径保持简单。一次完整导出包含文章、资源、评论和站点设置。</p>",
-      },
-      contentText: {
-        zh: "导入流程规范化 Markdown、HTML 和图片 ZIP，导出流程生成可迁移的 Markdown、HTML、资源、评论和设置。",
-      },
-      seoTitle: { zh: "可迁移的 Markdown、HTML 和 ZIP 备份模型" },
-      seoDescription: {
-        zh: "Cloudflare 原生发布系统的内容模型，可导入 Markdown 与 HTML，并导出可迁移归档。",
+    contentHtml:
+      "<p>The cheapest component in the furnace — the titanium fingers holding your pallets — touches every board you sell.</p><p>Treat consumables as process control.</p>",
+    contentText:
+      "Wave soldering fingers, pallet condition, and chain wear quietly drive defect rates; treat consumables as process control and match replacements to drawings.",
+    status: "published",
+    source: "editor",
+    featured: false,
+    pinned: false,
+    commentsEnabled: true,
+    publishedAt: "2026-08-12T09:00:00.000Z",
+    updatedAt: "2026-08-12T09:00:00.000Z",
+    authorName: "Jason Wu",
+    series: lineNotes,
+    tags: [wave, spares],
+    seoTitle: "Wave soldering titanium fingers: a yield field guide",
+    seoDescription:
+      "How wave soldering fingers, pallets, and chain condition quietly drive defect rates in EMS lines.",
+    i18n: {
+      title: { zh: "波峰焊里藏着的利润，就藏在你炉子里面" },
+      excerpt: {
+        zh: "夹爪印、治具变形、链条抖动，正在悄悄吃掉你的波峰焊良率。",
       },
     },
   },
@@ -311,31 +344,19 @@ HTML 导入提供两种模式：普通使用场景下的安全清洗 HTML，以�
 
 export const comments: Comment[] = [
   {
-    id: "comment-1",
-    postId: "post-edge-publishing",
+    id: "comment-demo-1",
+    postId: "post-manual-insertion-tax",
     parentId: null,
-    authorName: "Reader",
-    authorEmailHash: "demo-email-hash",
-    authorWebsite: null,
-    body: "The split between D1 records and Markdown exports makes migration feel realistic.",
-    status: "approved",
-    createdAt: "2026-05-22T13:15:00.000Z",
-    i18n: {
-      body: { zh: "D1 记录和 Markdown 导出的分工让迁移路径看起来很扎实。" },
-    },
-  },
-  {
-    id: "comment-2",
-    postId: "post-skill-runner",
-    parentId: null,
-    authorName: "Automation tester",
+    authorName: "Marta R.",
     authorEmailHash: "pending-email-hash",
-    authorWebsite: "https://example.com",
-    body: "Please add the exact fallback path for Cloudflare API token creation.",
-    status: "pending",
-    createdAt: "2026-05-23T06:45:00.000Z",
+    authorWebsite: null,
+    body: "We counted 14 insertion moves per board on our power module. The escape-rate math convinced my plant manager.",
+    status: "approved",
+    createdAt: "2026-08-25T02:10:00.000Z",
     i18n: {
-      body: { zh: "请补上 Cloudflare API Token 创建失败时的明确兜底路径。" },
+      body: {
+        zh: "我们电源板每块要插 14 个元件。逃逸成本的算法说服了我的厂长。",
+      },
     },
   },
 ];
@@ -348,17 +369,17 @@ export const assets: Asset[] = [
     filename: "og-default.svg",
     contentType: "image/svg+xml",
     sizeBytes: 4096,
-    createdAt: "2026-05-20T08:00:00.000Z",
+    createdAt: "2026-08-24T08:00:00.000Z",
     attachedPostId: null,
   },
   {
     id: "asset-cover",
-    key: "posts/edge-publishing-cover.jpg",
+    key: "posts/hero-insertion-line.jpg",
     url: posts[0].coverImage,
-    filename: "edge-publishing-cover.jpg",
+    filename: "hero-insertion-line.jpg",
     contentType: "image/jpeg",
-    sizeBytes: 184320,
-    createdAt: "2026-05-20T09:10:00.000Z",
-    attachedPostId: "post-edge-publishing",
+    sizeBytes: 65536,
+    createdAt: "2026-08-24T09:10:00.000Z",
+    attachedPostId: "post-manual-insertion-tax",
   },
 ];

@@ -12,10 +12,9 @@ import {
   SearchIcon,
   UserCircleIcon,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { LanguageToggle } from "#/components/language-toggle";
-import { siteBrandLinkClassName, SiteBrandText } from "#/components/site-brand";
 import {
   resolveStylePreset,
   StylePresetCycleButton,
@@ -40,7 +39,9 @@ export function SiteShell({
   const { preset, nextPreset, selectPreset } = useStylePreset(settingsPreset);
   const searchLabel = locale === "zh" ? "搜索" : "Search";
   const githubLink = siteSettings.socialLinks.find(isGitHubSocialLink);
-  const footerSocialLinks = siteSettings.socialLinks.filter((link) => !isGitHubSocialLink(link));
+  const footerSocialLinks = siteSettings.socialLinks.filter(
+    (link) => !isGitHubSocialLink(link) && isSocialMatrixLink(link),
+  );
   const navigation = getMarketingNavigation(siteSettings.navigation, locale);
   const creatorCreditLabel = locale === "zh" ? "创作者" : "Created by";
   const localizedNavigation = navigation.map((item) => ({
@@ -59,8 +60,12 @@ export function SiteShell({
     >
       <header className="sticky top-0 z-40 border-b-2 border-foreground bg-background/95 backdrop-blur-xl">
         <div className="mx-auto flex min-h-14 max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-8">
-          <Link to="/" className={siteBrandLinkClassName} aria-label={siteSettings.name}>
-            <SiteBrandText name={siteSettings.name} />
+          <Link
+            to="/"
+            className="flex min-w-0 shrink items-center gap-2"
+            aria-label={siteSettings.name}
+          >
+            <SiteBrandLogo />
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
@@ -103,38 +108,96 @@ export function SiteShell({
       <MobileTabBar locale={locale} />
 
       <footer className="border-t border-border/80 bg-muted/45">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <div>
-            <p className="text-sm font-semibold">{siteSettings.name}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{siteSettings.description}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Powered by{" "}
-              <a href="https://01mvp.com" className="font-semibold text-foreground hover:text-link">
-                01mvp.com
-              </a>
-              <span aria-hidden="true"> · </span>
-              {creatorCreditLabel}{" "}
-              <a
-                href="https://makerjackie.com"
-                className="font-semibold text-foreground hover:text-link"
-              >
-                Jackie
-              </a>
-            </p>
-          </div>
-          {footerSocialLinks.length ? (
-            <div className="flex flex-wrap items-center gap-3">
-              {footerSocialLinks.map((link) => (
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="grid gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
+            <div>
+              <p className="text-sm font-semibold">{siteSettings.name}</p>
+              <p className="mt-1 max-w-sm text-xs leading-5 text-muted-foreground">
+                {siteSettings.description}
+              </p>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Powered by{" "}
                 <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs text-muted-foreground transition hover:text-foreground"
+                  href="https://01mvp.com"
+                  className="font-semibold text-foreground hover:text-link"
                 >
-                  {link.label}
+                  01mvp.com
                 </a>
-              ))}
+                <span aria-hidden="true"> · </span>
+                {creatorCreditLabel}{" "}
+                <a
+                  href="https://makerjackie.com"
+                  className="font-semibold text-foreground hover:text-link"
+                >
+                  Jackie
+                </a>
+              </p>
             </div>
-          ) : null}
+            <div>
+              <p className="text-xs font-semibold tracking-wide uppercase">Follow the journey</p>
+              <ul className="mt-3 space-y-1.5">
+                {footerSocialLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="text-sm font-semibold transition hover:text-link"
+                      {...(link.href.startsWith("http")
+                        ? { target: "_blank", rel: "noreferrer" }
+                        : {})}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold tracking-wide uppercase">Get started</p>
+              <p className="mt-3 text-sm leading-6">
+                Browse our machine catalog at{" "}
+                <a
+                  href="https://file.autoinsertion.com"
+                  className="font-semibold text-link hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  file.autoinsertion.com
+                </a>{" "}
+                and find machine photos at{" "}
+                <a
+                  href="https://ph.smthelp.com"
+                  className="font-semibold text-link hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  ph.smthelp.com
+                </a>
+                .
+              </p>
+              <p className="mt-3 text-sm leading-6">
+                Contact us:{" "}
+                <a
+                  href="mailto:info@smthelp.com"
+                  className="font-semibold text-link hover:underline"
+                >
+                  info@smthelp.com
+                </a>
+                <span aria-hidden="true"> · </span>
+                WhatsApp:{" "}
+                <a
+                  href="https://wa.me/8613602562576"
+                  className="font-semibold text-link hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  +86 13602562576
+                </a>
+              </p>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Your Trusted Partner for SMT &amp; THT Solutions
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
@@ -171,6 +234,51 @@ function isLegacyStarterNavigation(navigation: ShellNavigationItem[]) {
   return (
     navigation.length === legacyPaths.length &&
     legacyPaths.every((path, index) => navigation[index]?.href === path)
+  );
+}
+
+const brandLogoRemote =
+  "https://ph.smthelp.com/images/2024-06-26/Southern-Machinery-logo-300x83.png";
+const brandLogoLocal = "/images/southern-machinery-logo.png";
+
+function SiteBrandLogo() {
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  const swapToLocal = () => {
+    const img = imgRef.current;
+    if (img && !img.src.endsWith(brandLogoLocal)) {
+      img.src = brandLogoLocal;
+    }
+  };
+
+  useEffect(() => {
+    // The remote image can 404 before hydration attaches onError; recover on mount.
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth === 0) {
+      swapToLocal();
+    }
+  }, []);
+
+  return (
+    <>
+      <img
+        ref={imgRef}
+        src={brandLogoRemote}
+        alt="Southern Machinery"
+        width={300}
+        height={83}
+        className="h-8 w-auto shrink-0 sm:h-9"
+        loading="eager"
+        decoding="async"
+        onError={swapToLocal}
+      />
+      <span className="hidden border-l border-border pl-2.5 text-sm leading-tight font-black tracking-tight lg:block">
+        Jason Wu
+        <span className="block text-[11px] leading-tight font-semibold text-muted-foreground">
+          SMT &amp; THT Solutions
+        </span>
+      </span>
+    </>
   );
 }
 
@@ -305,6 +413,18 @@ type SocialLink = SiteSettings["socialLinks"][number];
 
 function isGitHubSocialLink(link: SocialLink) {
   return link.label.trim().toLowerCase() === "github" || link.href.includes("github.com");
+}
+
+const socialMatrixLabels = new Set([
+  "linkedin company",
+  "linkedin profile",
+  "twitter",
+  "facebook",
+  "youtube channel",
+]);
+
+function isSocialMatrixLink(link: SocialLink) {
+  return socialMatrixLabels.has(link.label.trim().toLowerCase());
 }
 
 function HeaderGitHubLink({ link }: { readonly link: SocialLink }) {

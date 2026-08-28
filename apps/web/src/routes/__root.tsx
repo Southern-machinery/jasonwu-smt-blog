@@ -199,8 +199,44 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 
         {import.meta.env.DEV ? <DevToolsWrapper /> : null}
 
+        <ChatwootWidget />
         <Scripts />
       </body>
     </html>
   );
+}
+
+function ChatwootWidget() {
+  useEffect(() => {
+    const w = window as typeof window & {
+      chatwootSettings?: Record<string, string>;
+      chatwootSDK?: { run: (config: { websiteToken: string; baseUrl: string }) => void };
+    };
+
+    if (w.chatwootSDK || document.getElementById("chatwoot-sdk-script")) {
+      return;
+    }
+
+    w.chatwootSettings = {
+      position: "right",
+      type: "standard",
+      launcherTitle: "Southern Machinery Global Support",
+    };
+
+    // https (not http) so the SDK is not blocked as mixed content on deployed pages.
+    const baseUrl = "https://chat.smthelp.com";
+    const script = document.createElement("script");
+    script.id = "chatwoot-sdk-script";
+    script.src = `${baseUrl}/packs/js/sdk.js`;
+    script.async = true;
+    script.onload = () => {
+      w.chatwootSDK?.run({
+        websiteToken: "saMcpgSupcmd1VQwytgPLfbK",
+        baseUrl,
+      });
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  return null;
 }
