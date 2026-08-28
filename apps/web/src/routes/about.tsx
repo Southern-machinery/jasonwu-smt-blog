@@ -145,6 +145,30 @@ function AboutPage() {
           </div>
         </section>
 
+        <section className="border-b border-border bg-muted/35">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+            <p className="text-sm font-semibold text-link uppercase">{copy.casesEyebrow}</p>
+            <h2 className="mt-3 text-3xl font-semibold text-balance">{copy.casesTitle}</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
+              {copy.casesBody}
+            </p>
+            <div className="mt-8 grid gap-px border border-border bg-border md:grid-cols-2">
+              {copy.cases.map((item) => (
+                <article key={item.client} className="bg-background p-6">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                    {item.kind}
+                  </p>
+                  <h3 className="mt-2 text-2xl font-semibold">{item.client}</h3>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                  <p className="mt-4 inline-flex items-center gap-2 border-t border-border pt-3 text-sm font-semibold text-link">
+                    {item.result}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section>
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
             <div className="grid gap-px border border-border bg-border md:grid-cols-3">
@@ -256,6 +280,26 @@ function getAboutCopy(locale: ReturnType<typeof getCurrentLocale>) {
             "这个博客记录真实项目：NR12 安全改造、免费 demo 直播、从手工到自动的每一步。",
         },
       ],
+      casesEyebrow: "精选项目",
+      casesTitle: "写在档案里的两个交付。",
+      casesBody:
+        "以下项目与数据发布在我的 LinkedIn 档案（linkedin.com/in/smtsupplier），可向客户与同事核实。",
+      cases: [
+        {
+          kind: "THT 自动插件线",
+          client: "Foxconn",
+          description:
+            "为富士康的高产量产线部署了一条先进的 THT 自动插件线，在压缩停机的同时显著提升产出。",
+          result: "吞吐量提升 25%，停机时间下降",
+        },
+        {
+          kind: "定制 SMT 方案",
+          client: "Jabil",
+          description:
+            "为 Jabil 定制了一套 SMT 解决方案，针对其高可靠性产品的贴装与工艺链路做专项优化。",
+          result: "缺陷率降低 30%",
+        },
+      ],
       paths: [
         {
           eyebrow: "Blog",
@@ -340,6 +384,26 @@ function getAboutCopy(locale: ReturnType<typeof getCurrentLocale>) {
         title: "Publishing the field notes",
         description:
           "This blog documents real projects — NR12 safety retrofits, free demo livestreams, and every step from manual to automated.",
+      },
+    ],
+    casesEyebrow: "Selected projects",
+    casesTitle: "Two deliveries on the record.",
+    casesBody:
+      "These projects and figures are published on my LinkedIn profile (linkedin.com/in/smtsupplier) — verifiable, not anonymous claims.",
+    cases: [
+      {
+        kind: "THT auto insertion line",
+        client: "Foxconn",
+        description:
+          "We deployed a state-of-the-art THT auto insertion line for Foxconn's high-volume production, lifting output while cutting downtime.",
+        result: "+25% throughput, reduced downtime",
+      },
+      {
+        kind: "Customized SMT solution",
+        client: "Jabil",
+        description:
+          "For Jabil we customized an SMT solution targeted at their high-reliability assembly requirements, from placement to process control.",
+        result: "-30% defect rates",
       },
     ],
     paths: [
