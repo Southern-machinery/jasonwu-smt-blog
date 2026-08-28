@@ -116,20 +116,19 @@ export function SiteShell({
                 {siteSettings.description}
               </p>
               <p className="mt-3 text-xs text-muted-foreground">
-                Powered by{" "}
+                Powered by:{" "}
                 <a
-                  href="https://01mvp.com"
+                  href="https://www.smthelp.com"
                   className="font-semibold text-foreground hover:text-link"
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  01mvp.com
+                  SMThelp.com
                 </a>
                 <span aria-hidden="true"> · </span>
-                {creatorCreditLabel}{" "}
-                <a
-                  href="https://makerjackie.com"
-                  className="font-semibold text-foreground hover:text-link"
-                >
-                  Jackie
+                {creatorCreditLabel}:{" "}
+                <a href="/about" className="font-semibold text-foreground hover:text-link">
+                  Jason Wu
                 </a>
               </p>
             </div>
