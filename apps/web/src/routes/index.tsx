@@ -1,11 +1,4 @@
 import {
-  SiCloudflare,
-  SiDrizzle,
-  SiReact,
-  SiTypescript,
-  SiVite,
-} from "@icons-pack/react-simple-icons";
-import {
   formatDate,
   localizePost,
   localizeSiteSettings,
@@ -15,33 +8,28 @@ import {
 import { Button } from "@repo/ui/components/button";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArchiveIcon,
   ArrowRightIcon,
-  BookOpenIcon,
-  CloudIcon,
+  CheckIcon,
+  CogIcon,
+  PackageIcon,
   ExternalLinkIcon,
-  FilesIcon,
   FileTextIcon,
-  GitBranchIcon,
+  FlameIcon,
   GlobeIcon,
-  ImageIcon,
-  LockKeyholeIcon,
-  MessageSquareTextIcon,
-  PencilIcon,
-  RocketIcon,
-  ServerIcon,
-  Share2Icon,
-  ShieldCheckIcon,
-  ShieldIcon,
-  SparklesIcon,
-  UserRoundIcon,
+  LayersIcon,
+  MailIcon,
+  MessageCircleIcon,
+  PlayIcon,
+  SprayCanIcon,
+  TruckIcon,
+  VideoIcon,
+  WrenchIcon,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, type ComponentType, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import { SiteShell } from "#/components/site-shell";
 import { $getHomePageData, type HomePageData } from "#/lib/cms-server";
-import { getDocsUrl } from "#/lib/docs-i18n";
 import { getCurrentLocale } from "#/lib/i18n";
 import { m } from "#/paraglide/messages.js";
 
@@ -61,12 +49,6 @@ type FeatureItem = {
   readonly icon: LucideIcon;
 };
 
-type ThemePreview = {
-  readonly themePreset: string;
-  readonly title: string;
-  readonly description: string;
-};
-
 type FreeHighlight = {
   readonly icon: LucideIcon;
   readonly label: string;
@@ -77,26 +59,194 @@ type SetupPath = {
   readonly title: string;
   readonly description: string;
   readonly cta: string;
-  readonly icon: LucideIcon;
-};
-
-type CreatorSpotlight = {
-  readonly title: string;
-  readonly description: string;
   readonly href: string;
-  readonly cta: string;
   readonly icon: LucideIcon;
 };
 
-type TechItem = {
+type ProductBadge = {
   readonly name: string;
   readonly label: string;
-  readonly icon: ComponentType<{ className?: string; style?: CSSProperties }>;
+  readonly icon: LucideIcon;
 };
 
 type HomeRevealStyle = CSSProperties & {
   readonly "--home-reveal-delay": string;
 };
+
+const WHATSAPP_URL = "https://wa.me/8613602562576";
+const EMAIL_URL = "mailto:info@smthelp.com";
+const YOUTUBE_URL = "https://www.youtube.com/c/Smthelping";
+
+const demoVideos: readonly {
+  readonly id: string;
+  readonly title: { readonly en: string; readonly zh: string };
+  readonly note: { readonly en: string; readonly zh: string };
+}[] = [
+  {
+    id: "0k4U5NLKq4k",
+    title: {
+      en: "How China made the auto insertion machine",
+      zh: "中国是如何制造自动插件机的",
+    },
+    note: {
+      en: "The build story behind the THT inserters I put on EMS floors every week.",
+      zh: "每周被我送上 EMS 产线的插件机，背后是这样造出来的。",
+    },
+  },
+  {
+    id: "KTTUTJRVT4M",
+    title: {
+      en: "THT line: eyelet + jumper wire + axial + radial",
+      zh: "THT 产线：鸡眼 + 跨线 + 卧式 + 立式一次过",
+    },
+    note: {
+      en: "One inline line running four insertion technologies end to end.",
+      zh: "一条在线产线跑通四种插装工艺。",
+    },
+  },
+  {
+    id: "0ivNvJMlJrQ",
+    title: {
+      en: "S7020T: reel terminal & radial taped odd-form insertion",
+      zh: "S7020T：卷装端子与立式编带异形件插装",
+    },
+    note: {
+      en: "Terminals and radial parts feeding from reels — no bulk bowls, no polarity surprises.",
+      zh: "端子与立式元件用编带供料——不用振动盘，极性不翻车。",
+    },
+  },
+  {
+    id: "hFUWp8dT0t0",
+    title: {
+      en: "AGV pallet transport at the wave soldering machine",
+      zh: "AGV 在波峰焊机旁转运治具托盘",
+    },
+    note: {
+      en: "SAGV/SFY-class trolleys moving pallets so operators stop walking.",
+      zh: "自动小车搬运治具托盘，让操作工不再来回走动。",
+    },
+  },
+  {
+    id: "iQx-MsR829c",
+    title: {
+      en: "10x cost saving: radial feeder auto odd-form insertion",
+      zh: "10 倍成本优势：立式飞达异形件自动插装",
+    },
+    note: {
+      en: "Why taped odd-form feeding beats hand insertion on high-mix boards.",
+      zh: "为什么编带异形件供料在高混产线上跑赢手工插件。",
+    },
+  },
+  {
+    id: "3NqHcrmLeKM",
+    title: {
+      en: "Installing the ESD PCB magazine rack, step by step",
+      zh: "防静电 PCB 起盘架安装步骤",
+    },
+    note: {
+      en: "The same rack family we safety-adapted for Brazil NR12 feeder trolleys.",
+      zh: "就是这个架子家族——我们曾为巴西 NR12 改造过飞达台车。",
+    },
+  },
+];
+
+const resourceDocs: readonly {
+  readonly title: { readonly en: string; readonly zh: string };
+  readonly desc: { readonly en: string; readonly zh: string };
+  readonly href: string;
+  readonly kind: string;
+}[] = [
+  {
+    title: { en: "Auto-insertion readiness checklist", zh: "自动插件可行性检查表" },
+    desc: {
+      en: "The exact questions I answer before quoting an insertion line.",
+      zh: "报价插件线之前必须回答清楚的那份问题清单。",
+    },
+    href: "https://file.autoinsertion.com/public/Blog%20file/auto-insertion-readiness-checklist.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "ROI calculator template", zh: "ROI 测算模板" },
+    desc: {
+      en: "Fill in boards, moves, and wages — get a payback window.",
+      zh: "填入板数、插点数与工资——得到回本周期。",
+    },
+    href: "https://file.autoinsertion.com/public/Blog%20file/roi-calculator-template.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "S3010A radial inserter catalog", zh: "S3010A 立式插件机图册" },
+    desc: {
+      en: "High-speed radial insertion with visual verification.",
+      zh: "高速立式插装，带视觉检测。",
+    },
+    href: "https://file.autoinsertion.com/public/Southern%20Machinery%20Product/S3010A%20Radial%20Inserter.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "S7900 odd-form inserter catalog", zh: "S7900 异形件插件机图册" },
+    desc: {
+      en: "Connectors, transformers, relays — fed, placed, clinched.",
+      zh: "连接器、变压器、继电器：供料、插装、打弯一次完成。",
+    },
+    href: "https://file.autoinsertion.com/public/SMThelp%20Machine%20Presentation/Precision_S7900%20odd%20form%20insertion%20machine.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "SFY03 AGV for EMS lines", zh: "SFY03 AGV：EMS 产线自动转运" },
+    desc: {
+      en: "Wireless, rechargeable pallet and magazine transport.",
+      zh: "无线、可充电的托盘与 pcb 起盘转运。",
+    },
+    href: "https://file.autoinsertion.com/public/SMThelp%20Machine%20Presentation/SFY03%20AGV%20Effortless%20Flexibility%20for%20EMS%20SMT%20Lines.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "S-WS350 wave soldering machine", zh: "S-WS350 波峰焊机" },
+    desc: {
+      en: "Lead-free wave soldering plus fingers, nozzles, and spare parts.",
+      zh: "无铅波峰焊，兼供钛爪、喷嘴与备件。",
+    },
+    href: "https://file.autoinsertion.com/public/Southern%20Machinery%20Product/S-WS350%20%20wave%20soldering%20machine.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "Customized feeder & nozzle catalog V03", zh: "定制飞达与吸嘴目录 V03" },
+    desc: {
+      en: "Axial/radial tape, tube, tray, belt and vibe feeders for major brands.",
+      zh: "卧式/立式编带、管式、托盘、皮带与振动飞达，兼容主流品牌。",
+    },
+    href: "https://file.autoinsertion.com/public/Southern%20Machinery%20Product/SAF1001%20Axial%20Tape%20Feeder%20%20Southern%20Machinery%20Customized%20Feeder%20Nozzle%20Catalog%20V03.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "SMT production line solution 2023", zh: "SMT 整线方案 2023" },
+    desc: {
+      en: "Full-line references from printing to inspection and THT.",
+      zh: "从印刷、检测直到 THT 的整线参考方案。",
+    },
+    href: "https://file.autoinsertion.com/public/Southern%20Machinery%20Product/SMT%20production%20line%20solution%202023.pdf",
+    kind: "PDF",
+  },
+  {
+    title: { en: "All machine photos", zh: "全部设备实拍" },
+    desc: {
+      en: "Search the Southern Machinery image bed at ph.smthelp.com.",
+      zh: "在 ph.smthelp.com 图床按型号搜索实拍图。",
+    },
+    href: "https://ph.smthelp.com",
+    kind: "Photos",
+  },
+  {
+    title: { en: "Full catalog & manuals library", zh: "完整目录与手册库" },
+    desc: {
+      en: "Every catalog and manual at file.autoinsertion.com.",
+      zh: "所有目录与手册都在 file.autoinsertion.com。",
+    },
+    href: "https://file.autoinsertion.com",
+    kind: "Library",
+  },
+];
 
 function HomePage() {
   const data: HomePageData = Route.useLoaderData();
@@ -114,14 +264,12 @@ function HomePage() {
 
 function ShelfHome({ posts, locale }: HomeViewProps) {
   const copy = getHomeCopy(locale);
-  const aiSetupDocsHref = getDocsUrl(["ai-setup"], locale);
-  const obsidianDocsHref = getDocsUrl(["obsidian"], locale);
   const latestPosts = posts.slice(0, 3);
 
   return (
     <div data-home-surface className="bg-background">
       <HomeMotionController />
-      {/* ── Hero ── */}
+      {/* ── Hook ── */}
       <section
         data-home-hero
         className="relative isolate overflow-hidden border-b-2 border-foreground"
@@ -150,16 +298,17 @@ function ShelfHome({ posts, locale }: HomeViewProps) {
           </p>
           <div data-home-reveal style={getRevealStyle(270)} className="mt-8 flex flex-wrap gap-3">
             <Button
-              render={<a href={aiSetupDocsHref} aria-label={copy.primaryCta} />}
+              render={<a href={WHATSAPP_URL} aria-label={copy.primaryCta} />}
               nativeButton={false}
               size="lg"
               className="hover:-translate-y-0.5"
             >
+              <MessageCircleIcon />
               {copy.primaryCta}
               <ArrowRightIcon />
             </Button>
             <Button
-              render={<Link to="/demo" />}
+              render={<Link to="/blog" search={{ q: "", tag: "", series: "", page: 1 }} />}
               variant="outline"
               nativeButton={false}
               size="lg"
@@ -169,97 +318,119 @@ function ShelfHome({ posts, locale }: HomeViewProps) {
               {copy.secondaryCta}
             </Button>
           </div>
+          <p
+            data-home-reveal
+            style={getRevealStyle(330)}
+            className="mt-6 text-xs leading-5 text-muted-foreground"
+          >
+            {copy.trustLine}
+          </p>
+        </div>
+        <div
+          data-home-reveal
+          style={getRevealStyle(380)}
+          className="relative z-10 border-t-2 border-foreground"
+        >
+          <img
+            src="/images/hero-insertion-line.jpg"
+            alt={copy.heroImageAlt}
+            width={1600}
+            height={552}
+            className="mx-auto block w-full max-w-6xl object-cover"
+            loading="eager"
+            decoding="async"
+          />
         </div>
       </section>
 
       <LatestPostsSection copy={copy} latestPosts={latestPosts} locale={locale} />
 
-      {/* ── Your Own Corner ── */}
+      {/* ── Diagnosis ── */}
       <section className="border-b border-border bg-muted/35">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
           <div data-home-reveal className="grid gap-9 lg:grid-cols-[0.44fr_0.56fr]">
             <div>
-              <p className="text-sm font-semibold text-link uppercase">{copy.ownershipEyebrow}</p>
+              <p className="text-sm font-semibold text-link uppercase">{copy.diagnosisEyebrow}</p>
               <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-                {copy.ownershipTitle}
+                {copy.diagnosisTitle}
               </h2>
             </div>
-            <p className="self-end text-sm leading-7 text-muted-foreground">{copy.ownershipBody}</p>
+            <p className="self-end text-sm leading-7 text-muted-foreground">{copy.diagnosisBody}</p>
           </div>
           <div className="mt-10 divide-y divide-border border-y border-border">
-            {copy.ownershipPoints.map((point, index) => (
+            {copy.diagnosisPoints.map((point, index) => (
               <OwnershipRow key={point.title} point={point} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Core Features ── */}
+      {/* ── Pillars (the three tags) ── */}
       <section className="border-b border-border bg-background">
         <div className="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 lg:grid-cols-[0.42fr_0.58fr] lg:px-8 lg:py-16 xl:px-12">
           <div data-home-reveal className="max-w-md">
-            <p className="text-sm font-semibold text-link uppercase">{copy.featuresEyebrow}</p>
+            <p className="text-sm font-semibold text-link uppercase">{copy.pillarsEyebrow}</p>
             <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-              {copy.featuresTitle}
+              {copy.pillarsTitle}
             </h2>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">{copy.featuresBody}</p>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">{copy.pillarsBody}</p>
           </div>
           <div className="divide-y divide-border border-y border-border">
-            {copy.features.map((feature, index) => (
+            {copy.pillars.map((feature, index) => (
               <FeatureRow key={feature.title} feature={feature} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Obsidian ── */}
+      {/* ── Scenes ── */}
       <section className="border-b border-border bg-muted/35">
         <div className="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 lg:grid-cols-[0.44fr_0.56fr] lg:px-8 lg:py-16 xl:px-12">
           <div data-home-reveal className="max-w-md">
-            <p className="text-sm font-semibold text-link uppercase">{copy.obsidianEyebrow}</p>
+            <p className="text-sm font-semibold text-link uppercase">{copy.scenesEyebrow}</p>
             <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-              {copy.obsidianTitle}
+              {copy.scenesTitle}
             </h2>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">{copy.obsidianBody}</p>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">{copy.scenesBody}</p>
             <div className="mt-6">
               <Button
-                render={<a href={obsidianDocsHref} aria-label={copy.obsidianCta} />}
+                render={<a href={YOUTUBE_URL} aria-label={copy.scenesCta} />}
                 variant="outline"
                 nativeButton={false}
                 className="hover:-translate-y-0.5"
               >
-                <FileTextIcon />
-                {copy.obsidianCta}
+                <VideoIcon />
+                {copy.scenesCta}
               </Button>
             </div>
           </div>
           <div className="divide-y divide-border border-y border-border">
-            {copy.obsidianPoints.map((feature, index) => (
+            {copy.scenesPoints.map((feature, index) => (
               <FeatureRow key={feature.title} feature={feature} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Automation ── */}
+      {/* ── Framework ── */}
       <section className="border-b border-border bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
           <div data-home-reveal className="grid gap-9 lg:grid-cols-[0.44fr_0.56fr]">
             <div>
-              <p className="text-sm font-semibold text-link uppercase">{copy.skillEyebrow}</p>
+              <p className="text-sm font-semibold text-link uppercase">{copy.frameworkEyebrow}</p>
               <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-                {copy.skillTitle}
+                {copy.frameworkTitle}
               </h2>
             </div>
-            <p className="self-end text-sm leading-7 text-muted-foreground">{copy.skillBody}</p>
+            <p className="self-end text-sm leading-7 text-muted-foreground">{copy.frameworkBody}</p>
           </div>
           <div className="mt-8 grid gap-px border border-border bg-border md:grid-cols-2">
             {copy.setupPaths.map((path, index) => (
-              <SetupPathCard key={path.title} href={aiSetupDocsHref} path={path} index={index} />
+              <SetupPathCard key={path.title} href={path.href} path={path} index={index} />
             ))}
           </div>
           <ol className="mt-10 divide-y divide-border border-y border-border">
-            {copy.skillSteps.map((step, index) => (
+            {copy.frameworkSteps.map((step, index) => (
               <li
                 key={step.number}
                 data-home-reveal
@@ -280,7 +451,7 @@ function ShelfHome({ posts, locale }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ── Merged: No Server + Free Quota ── */}
+      {/* ── Vehicle: free demo + commitments ── */}
       <section className="border-b border-border bg-muted/35">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
           <p data-home-reveal className="text-sm font-semibold text-link uppercase">
@@ -306,94 +477,232 @@ function ShelfHome({ posts, locale }: HomeViewProps) {
             ))}
           </div>
           <div className="mt-10 divide-y divide-border border-y border-border">
-            {copy.quotaItems.map((item, index) => (
+            {copy.commitments.map((item, index) => (
               <QuotaRow key={item.service} item={item} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Tech Stack ── */}
+      {/* ── Product lines ── */}
       <section className="border-b border-border bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
           <p data-home-reveal className="text-sm font-semibold text-link uppercase">
-            {copy.techEyebrow}
+            {copy.productsEyebrow}
           </p>
           <h2
             data-home-reveal
             style={getRevealStyle(75)}
             className="mt-3 max-w-2xl text-3xl leading-tight font-semibold text-balance"
           >
-            {copy.techTitle}
+            {copy.productsTitle}
           </h2>
-          <div className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-            {copy.techItems.map((item, index) => (
-              <TechBadge key={item.name} item={item} index={index} />
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {copy.productBadges.map((item, index) => (
+              <ProductBadgeCard key={item.name} item={item} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Theme Presets ── */}
-      <section className="border-b border-border bg-muted/35">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
-          <div data-home-reveal className="grid gap-6 lg:grid-cols-[0.44fr_0.56fr] lg:items-end">
-            <div>
-              <p className="text-sm font-semibold text-link uppercase">{copy.themeEyebrow}</p>
-              <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-                {copy.themeTitle}
-              </h2>
-            </div>
-            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{copy.themeBody}</p>
-          </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {copy.themePreviews.map((preview, index) => (
-              <ThemePreviewCard key={preview.themePreset} preview={preview} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <CreatorSection copy={copy} />
+      <VideosSection locale={locale} />
+      <ResourcesSection locale={locale} />
+      <ContactSection copy={copy} locale={locale} />
     </div>
   );
 }
 
-function CreatorSection({ copy }: { readonly copy: ReturnType<typeof getHomeCopy> }) {
+function VideosSection({ locale }: { readonly locale: SupportedLocale }) {
+  const title = locale === "zh" ? "Watch the machines work" : "Watch the machines work";
+  const eyebrow = locale === "zh" ? "YouTube · Smthelping" : "YouTube · Smthelping";
+  const body =
+    locale === "zh"
+      ? "这些视频都来自我们自己的频道 youtube.com/c/Smthelping——你的元件上机演示也可以现场直播给你看。"
+      : "Every clip is from our own channel, youtube.com/c/Smthelping — and we can run your components live, on camera.";
+
   return (
-    <section className="border-b border-border bg-background">
+    <section id="videos" className="border-b border-border bg-muted/35">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
-        <div className="grid gap-9 lg:grid-cols-[0.4fr_0.6fr]">
-          <div data-home-reveal className="max-w-md">
-            <p className="text-sm font-semibold text-link uppercase">{copy.creatorEyebrow}</p>
-            <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
-              {copy.creatorTitle}
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-muted-foreground">{copy.creatorBody}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
+        <div data-home-reveal className="grid gap-9 lg:grid-cols-[0.44fr_0.56fr]">
+          <div className="max-w-md">
+            <p className="text-sm font-semibold text-link uppercase">{eyebrow}</p>
+            <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">{title}</h2>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">{body}</p>
+            <div className="mt-6">
               <Button
-                render={<a href="https://01mvp.com/template" aria-label={copy.creatorPrimaryCta} />}
+                render={<a href={YOUTUBE_URL} aria-label={title} />}
                 nativeButton={false}
                 className="hover:-translate-y-0.5"
               >
-                {copy.creatorPrimaryCta}
-                <ExternalLinkIcon />
+                <PlayIcon />
+                {locale === "zh" ? "订阅频道" : "Subscribe on YouTube"}
+              </Button>
+            </div>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {demoVideos.map((video, index) => (
+              <VideoCard key={video.id} video={video} locale={locale} index={index} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VideoCard({
+  index,
+  locale,
+  video,
+}: {
+  readonly index: number;
+  readonly locale: SupportedLocale;
+  readonly video: (typeof demoVideos)[number];
+}) {
+  const [playing, setPlaying] = useState(false);
+
+  return (
+    <article
+      data-home-reveal
+      data-home-card
+      style={getRevealStyle(index * 60)}
+      className="overflow-hidden rounded-lg border border-border bg-background"
+    >
+      {playing ? (
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0&autoplay=1`}
+          title={video.title[locale]}
+          className="aspect-video w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setPlaying(true)}
+          className="group relative block aspect-video w-full"
+          aria-label={video.title[locale]}
+        >
+          <img
+            src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+            alt=""
+            className="size-full object-cover transition group-hover:scale-[1.02]"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="absolute inset-0 flex items-center justify-center bg-foreground/25 transition group-hover:bg-foreground/15">
+            <span className="flex size-12 items-center justify-center rounded-full bg-background/90 text-foreground">
+              <PlayIcon className="size-5 translate-x-0.5" />
+            </span>
+          </span>
+        </button>
+      )}
+      <div className="p-4">
+        <p className="text-sm leading-tight font-semibold">{video.title[locale]}</p>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">{video.note[locale]}</p>
+      </div>
+    </article>
+  );
+}
+
+function ResourcesSection({ locale }: { readonly locale: SupportedLocale }) {
+  const eyebrow = locale === "zh" ? "目录与手册" : "Catalogs & manuals";
+  const title = locale === "zh" ? "先拿资料，再谈设备" : "Take the paperwork before the machine";
+  const body =
+    locale === "zh"
+      ? "检查表、ROI 模板和各产品目录都来自 file.autoinsertion.com——下载后带着你的板子来聊，效率翻倍。"
+      : "Checklists, an ROI template, and product catalogs from file.autoinsertion.com. Download first, then bring your boards to the conversation.";
+
+  return (
+    <section id="resources" className="border-b border-border bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
+        <div data-home-reveal className="max-w-2xl">
+          <p className="text-sm font-semibold text-link uppercase">{eyebrow}</p>
+          <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">{title}</h2>
+          <p className="mt-4 text-sm leading-6 text-muted-foreground">{body}</p>
+        </div>
+        <div className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-2">
+          {resourceDocs.map((doc, index) => (
+            <a
+              key={doc.href + doc.title.en}
+              href={doc.href}
+              data-home-reveal
+              data-home-card
+              style={getRevealStyle(index * 40)}
+              target={doc.href.startsWith("http") ? "_blank" : undefined}
+              rel="noreferrer"
+              className="group flex items-start gap-4 bg-background p-5 transition hover:bg-muted/35"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-foreground">
+                {doc.kind === "PDF" ? (
+                  <FileTextIcon className="size-5" />
+                ) : (
+                  <LayersIcon className="size-5" />
+                )}
+              </span>
+              <span className="min-w-0">
+                <span className="flex items-center gap-2">
+                  <span className="text-base font-semibold group-hover:text-link">
+                    {doc.title[locale]}
+                  </span>
+                  <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                    {doc.kind}
+                  </span>
+                </span>
+                <span className="mt-1.5 block text-sm leading-6 text-muted-foreground">
+                  {doc.desc[locale]}
+                </span>
+              </span>
+              <ExternalLinkIcon className="mt-1 ml-auto size-4 shrink-0 text-muted-foreground" />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection({
+  copy,
+  locale,
+}: {
+  readonly copy: ReturnType<typeof getHomeCopy>;
+  readonly locale: SupportedLocale;
+}) {
+  return (
+    <section id="contact" className="border-b border-border bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16 xl:px-12">
+        <div className="grid gap-9 lg:grid-cols-[0.4fr_0.6fr]">
+          <div data-home-reveal className="max-w-md">
+            <p className="text-sm font-semibold text-link uppercase">{copy.contactEyebrow}</p>
+            <h2 className="mt-3 text-3xl leading-tight font-semibold text-balance">
+              {copy.contactTitle}
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">{copy.contactBody}</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Button
+                render={<a href={WHATSAPP_URL} aria-label={copy.contactPrimaryCta} />}
+                nativeButton={false}
+                className="hover:-translate-y-0.5"
+              >
+                <MessageCircleIcon />
+                {copy.contactPrimaryCta}
               </Button>
               <Button
-                render={<a href="https://makerjackie.com" aria-label={copy.creatorSecondaryCta} />}
+                render={<a href={EMAIL_URL} aria-label={copy.contactSecondaryCta} />}
                 variant="outline"
                 nativeButton={false}
                 className="hover:-translate-y-0.5"
               >
-                {copy.creatorSecondaryCta}
-                <ExternalLinkIcon />
+                <MailIcon />
+                {copy.contactSecondaryCta}
               </Button>
             </div>
           </div>
 
           <div className="grid gap-px border border-border bg-border md:grid-cols-3">
-            {copy.creatorSpotlights.map((item, index) => (
-              <CreatorSpotlightCard key={item.href} item={item} index={index} />
+            {copy.contactSpotlights.map((item, index) => (
+              <ContactSpotlightCard key={item.href} item={item} index={index} />
             ))}
           </div>
         </div>
@@ -404,19 +713,17 @@ function CreatorSection({ copy }: { readonly copy: ReturnType<typeof getHomeCopy
           className="mt-10 flex flex-col gap-3 border-y border-foreground py-5 text-sm sm:flex-row sm:items-center sm:justify-between"
         >
           <p className="font-semibold">
-            {copy.poweredByLabel}{" "}
-            <a href="https://01mvp.com" className="text-link hover:underline">
-              01mvp.com
-            </a>
+            {locale === "zh" ? "签名服务承诺：" : "Service signature:"}{" "}
+            <span className="font-normal text-muted-foreground">
+              {locale === "zh"
+                ? "2 小时回复 · 当天出初步方案 · 3 天给问题解决预案"
+                : "reply in 2 hours · first proposal the same day · resolution plan in 3 days"}
+            </span>
           </p>
           <p className="text-muted-foreground">
-            {copy.creatorCreditLabel}{" "}
-            <a
-              href="https://makerjackie.com"
-              className="font-semibold text-foreground hover:text-link"
-            >
-              Jackie
-            </a>
+            {locale === "zh"
+              ? "Jason Wu · 深圳南部机械"
+              : "Jason Wu · Southern Machinery, Shenzhen"}
           </p>
         </div>
       </div>
@@ -424,12 +731,12 @@ function CreatorSection({ copy }: { readonly copy: ReturnType<typeof getHomeCopy
   );
 }
 
-function CreatorSpotlightCard({
+function ContactSpotlightCard({
   index,
   item,
 }: {
   readonly index: number;
-  readonly item: CreatorSpotlight;
+  readonly item: ContactSpotlight;
 }) {
   const Icon = item.icon;
 
@@ -749,7 +1056,13 @@ function QuotaRow({
   );
 }
 
-function TechBadge({ index, item }: { readonly index: number; readonly item: TechItem }) {
+function ProductBadgeCard({
+  index,
+  item,
+}: {
+  readonly index: number;
+  readonly item: ProductBadge;
+}) {
   const Icon = item.icon;
   return (
     <div
@@ -762,33 +1075,6 @@ function TechBadge({ index, item }: { readonly index: number; readonly item: Tec
       <span className="text-xs leading-tight font-semibold">{item.name}</span>
       <span className="text-xs text-muted-foreground">{item.label}</span>
     </div>
-  );
-}
-
-function ThemePreviewCard({
-  index,
-  preview,
-}: {
-  readonly index: number;
-  readonly preview: ThemePreview;
-}) {
-  return (
-    <article
-      data-home-reveal
-      data-home-card
-      data-theme-preset={preview.themePreset}
-      data-layout-preset="shelf"
-      style={getRevealStyle(index * 70)}
-      className="rounded-lg border border-border bg-background p-4 text-foreground"
-    >
-      <div className="flex items-center gap-2">
-        <span className="size-4 rounded-full bg-primary" />
-        <span className="size-4 rounded-full bg-muted" />
-        <span className="size-4 rounded-full bg-accent" />
-      </div>
-      <h3 className="mt-6 text-xl font-semibold">{preview.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{preview.description}</p>
-    </article>
   );
 }
 
@@ -821,580 +1107,539 @@ function isReaderFacingPost(post: { title: string; slug: string }) {
   );
 }
 
-// Cloudflare brand color
-const CF_ORANGE = "#F6821F";
+type ContactSpotlight = {
+  readonly title: string;
+  readonly description: string;
+  readonly href: string;
+  readonly cta: string;
+  readonly icon: LucideIcon;
+};
 
 function getHomeCopy(locale: SupportedLocale) {
-  const techItems: TechItem[] = [
+  const productBadges: ProductBadge[] = [
     {
-      name: "Cloudflare",
-      label: locale === "zh" ? "运行 / 存储 / DB" : "Runtime · Storage · DB",
-      icon: (props) => <SiCloudflare {...props} style={{ color: CF_ORANGE }} />,
+      name: "S3000A / S3010A",
+      label: locale === "zh" ? "立式插件机" : "Radial insertion",
+      icon: CogIcon,
     },
     {
-      name: "TanStack Start",
-      label: locale === "zh" ? "全栈框架" : "Full-stack framework",
-      icon: (props) => <SiReact {...props} style={{ color: "#61DAFB" }} />,
+      name: "S7020 / S7020T",
+      label: locale === "zh" ? "PIN眼/端子插装" : "Pin, eyelet & terminal",
+      icon: LayersIcon,
     },
     {
-      name: "TypeScript",
-      label: locale === "zh" ? "类型安全" : "Type safety",
-      icon: (props) => <SiTypescript {...props} style={{ color: "#3178C6" }} />,
+      name: "S7900",
+      label: locale === "zh" ? "异形件插装" : "Odd-form inserter",
+      icon: PackageIcon,
     },
     {
-      name: "Vite",
-      label: locale === "zh" ? "构建工具" : "Build tool",
-      icon: (props) => <SiVite {...props} style={{ color: "#646CFF" }} />,
+      name: "STF1003",
+      label: locale === "zh" ? "管式飞达" : "Tube feeder",
+      icon: CheckIcon,
     },
     {
-      name: "Drizzle ORM",
-      label: locale === "zh" ? "数据库 ORM" : "Database ORM",
-      icon: (props) => <SiDrizzle {...props} style={{ color: "#C5F74F" }} />,
+      name: "SUL460",
+      label: locale === "zh" ? "起盘机" : "Magazine unloader",
+      icon: TruckIcon,
     },
     {
-      name: "Better Auth",
-      label: locale === "zh" ? "认证" : "Auth",
-      icon: (props) => <ShieldIcon {...props} />,
+      name: "SAGV / SFY03",
+      label: locale === "zh" ? "AGV 自动转运" : "AGV transport",
+      icon: PlayIcon,
+    },
+    {
+      name: "S-WS series",
+      label: locale === "zh" ? "波峰焊与钛爪" : "Wave solder & fingers",
+      icon: FlameIcon,
+    },
+    {
+      name: "S-1688 / SME",
+      label: locale === "zh" ? "钢网与治具清洗" : "Stencil & pallet cleaning",
+      icon: SprayCanIcon,
     },
   ];
 
   if (locale === "zh") {
     return {
-      eyebrow: "个人博客内容系统 · Cloudflare 托管 · 自动化部署",
-      heroTitle: "搭建你的永久精神家园",
+      eyebrow: "Jason Wu · 南部机械（深圳，2011 年至今）",
+      heroTitle: "贴片机早已自动化，你的通孔线为什么还在靠人手？",
       heroBody:
-        "01mvp-blog-starter 是一套 Cloudflare 原生的个人博客内容系统。后台、评论、图床、RSS 开箱即用，初始化流程可以从配置一路跑到上线。",
-      primaryCta: "开始 AI 建站",
-      secondaryCta: "查看博客 Demo",
+        "我在 SMT/THT 设备行业做了 30 多年。这个站点的任务只有一个：把立式、异形件、PIN 眼端子的自动插装，从「以后再说」变成你下个月的排产计划。看视频、读现场笔记，或者直接把你的 PCB 文件发给我。",
+      primaryCta: "WhatsApp 约 15 分钟产线评估",
+      secondaryCta: "读产线笔记",
+      trustLine:
+        "设备与服务已交付给为 Signify、Flex、Schneider Electric、Kimball International、Fideltronik 等品牌生产的 EMS 工厂。",
+      heroImageAlt: "S3020A/S7020/S7040 轴立式端子异形件混合插装在线产线（带 loader）",
 
-      // ── Why Free ──
-      freeEyebrow: "免费边界",
-      freeTitle: "无需服务器，无需续费。",
-      freeBody:
-        "Cloudflare 的免费额度对个人博客来说基本用不完。你只需要在第一天配置好，之后几乎不需要再管服务器、数据库和存储。",
-      freeHighlights: [
-        {
-          icon: ServerIcon,
-          label: "无需购买服务器",
-          body: "运行在 Cloudflare Workers，免费额度每天 10 万次请求，个人博客基本用不完。",
-        },
-        {
-          icon: GlobeIcon,
-          label: "自带访问地址",
-          body: "默认提供 *.workers.dev 子域名，适合测试。面向中国大陆读者时，建议绑定自己的域名；长期大量访问还要考虑备案。",
-        },
-        {
-          icon: ShieldCheckIcon,
-          label: "底层服务成熟",
-          body: "Workers、D1、R2 都由 Cloudflare 托管，不需要自己维护 VPS、数据库实例和对象存储。",
-        },
-      ] as (FreeHighlight & { icon: LucideIcon })[],
-
-      // ── Your Own Corner ──
-      ownershipEyebrow: "内容所有权",
-      ownershipTitle: "你的内容，真正属于你。",
-      ownershipBody: "平台账号随时可以被封、内容随时可以被删除。个人站点是你真正拥有的互联网资产。",
-      ownershipPoints: [
-        {
-          icon: LockKeyholeIcon,
-          title: "不被平台控制",
-          description:
-            "平台可以限制你发什么、决定何时推送、甚至封号禁言。在自己的站点上，这些规则都是你定的。",
-        },
-        {
-          icon: PencilIcon,
-          title: "写你真正想写的",
-          description:
-            "发链接、留联系方式、评价竞品——在自己的博客里，这些都没有限制。不追热点，不讨好算法。",
-        },
-        {
-          icon: Share2Icon,
-          title: "一次写作，多平台同步",
-          description: "在博客写完，用 multipost 等工具分发到各平台，文章永不失联",
-        },
-      ] as { title: string; description: string; icon: LucideIcon }[],
-
-      // ── Core Features ──
-      featuresEyebrow: "核心功能",
-      featuresTitle: "全功能站点，不止步于静态页面。",
-      featuresBody:
-        "真正的数据库、真正的后台，评论和媒体管理全部内置，运行在 Cloudflare 免费额度上。",
-      features: [
-        {
-          title: "可视化写作后台",
-          description: "Markdown 编辑器、标签、封面、定时发布，全在 /admin 搞定。",
-          icon: BookOpenIcon,
-        },
-        {
-          title: "图床（R2 存储）",
-          description:
-            "用于图片、导入、导出和备份。开通通常需要绑定付款方式，小型个人站一般落在免费额度内。",
-          icon: CloudIcon,
-        },
-        {
-          title: "评论系统",
-          description: "内置评论，不依赖第三方。支持审核、关键词拦截，也可接入 AI 自动审核。",
-          icon: MessageSquareTextIcon,
-        },
-        {
-          title: "AI 自由改造",
-          description: "开源模板，用 Cursor / Claude Code 随时改主题、加功能，代码完全属于你。",
-          icon: SparklesIcon,
-        },
-        {
-          title: "多平台分发",
-          description: "配合 multipost 把文章同步到公众号、知乎、小红书，博客是原点，平台是出口。",
-          icon: Share2Icon,
-        },
-        {
-          title: "导出与迁移",
-          description: "文章、图片、评论、设置全部可导出，随时带走，不被锁死。",
-          icon: ArchiveIcon,
-        },
-      ],
-
-      obsidianEyebrow: "Git Markdown 写作流",
-      obsidianTitle: "把 Obsidian 风格的 Markdown 发布成博客。",
-      obsidianBody:
-        "把选中的 Markdown / MDX 文件放进 content/notes，用 GitHub 或部署流程发布。只有带 publish: true 的文件会公开，并继续共用标签、RSS、评论和站内搜索。",
-      obsidianCta: "阅读 Markdown 发布文档",
-      obsidianPoints: [
-        {
-          title: "按你的目录写作",
-          description:
-            "文件放在 content/notes，目录结构随你安排。网站不按文件夹展示，只按标签和发布时间组织文章。",
-          icon: FilesIcon,
-        },
-        {
-          title: "图片自动上传",
-          description:
-            "支持 ![[image.png]] 和普通 Markdown 图片。能在 vault 中找到的图片会上传到 R2，并自动改写链接。",
-          icon: ImageIcon,
-        },
-        {
-          title: "Git 同步发布与隐藏",
-          description:
-            "部署同步会记录源文件路径和内容 hash。移除 publish: true 或删除文件后，站内文章会自动隐藏。",
-          icon: GitBranchIcon,
-        },
-      ] satisfies FeatureItem[],
-
-      // ── Automation ──
-      skillEyebrow: "自动化初始化",
-      skillTitle: "两种方式，把模板交给 AI 跑完整流程。",
-      skillBody:
-        "推荐安装 01mvp-blog Skill；不想安装也可以直接复制文档里的 Prompt。AI 负责创建 Cloudflare 资源、写配置、跑迁移和部署，你只在账号、域名和付款确认等环节手动处理。",
-      setupPaths: [
-        {
-          title: "安装 01mvp-blog Skill",
-          description:
-            "适合长期使用。后续初始化命令、Cloudflare 资源创建和验收清单都可以跟着 Skill 更新。",
-          cta: "查看安装步骤",
-          icon: SparklesIcon,
-        },
-        {
-          title: "复制 AI 建站 Prompt",
-          description:
-            "适合先快速体验。把完整 Prompt 发给 Codex、Claude Code 或 Cursor，让 AI 按同一套流程执行。",
-          cta: "复制教程 Prompt",
-          icon: FileTextIcon,
-        },
-      ] satisfies SetupPath[],
-      skillSteps: [
-        {
-          number: "01",
-          title: "安装 Cloudflare 插件",
-          description: "在 Codex、Claude Code 或 Cursor 里连接 Cloudflare 账号，让 AI 能操作资源。",
-        },
-        {
-          number: "02",
-          title: "Fork 或 clone 模板",
-          description: "使用 01MVP/blog-starter 作为起点，也可以让 AI 创建新的 GitHub 仓库。",
-        },
-        {
-          number: "03",
-          title: "让 AI 执行初始化",
-          description: "自动创建 D1、KV、R2、Worker，写入配置，执行 migrations，部署上线。",
-        },
-        {
-          number: "04",
-          title: "处理少量人工确认",
-          description:
-            "登录 Cloudflare、确认付款方式、切换 nameserver、创建 OAuth 应用或验证邮件。",
-        },
-      ],
-
-      // ── Merged quota (rendered inline, no heading needed) ──
-      quotaEyebrow: "",
-      quotaTitle: "",
-      quotaBody: "",
-      quotaItems: [
-        {
-          service: "Workers",
-          quota: "10 万次请求 / 天",
-          note: "个人博客日常远低于此上限。",
-        },
-        {
-          service: "D1 数据库",
-          quota: "5 GB + 500 万次读 / 天",
-          note: "文章、评论、设置，够运营数年。",
-        },
-        {
-          service: "R2 图床",
-          quota: "10 GB，下载免费",
-          note: "用于图片、导入、导出和备份；通常需先确认付款方式。",
-        },
-        {
-          service: "KV 缓存",
-          quota: "10 万次读 / 天，1 GB",
-          note: "用于页面缓存加速。",
-        },
-      ],
-
-      // ── Tech Stack ──
-      techEyebrow: "技术栈",
-      techTitle: "Cloudflare 原生 · 现代全栈 · AI 友好",
-      techItems,
-
-      // ── Theme ──
-      themeEyebrow: "内置风格",
-      themeTitle: "四套预设主题，随时用 AI 改造。",
-      themeBody: "默认黑白极简。风格一键切换，或用 AI 工具改成任意风格。",
-      themePreviews: [
-        {
-          themePreset: "maker",
-          title: "黑白极简",
-          description: "高对比、留白充足，适合技术文章和个人内容站。",
-        },
-        {
-          themePreset: "apple",
-          title: "苹果圆角",
-          description: "蓝色主色、大圆角、柔和边框，适合产品文档。",
-        },
-        {
-          themePreset: "editorial",
-          title: "暖调人文",
-          description: "橙米色调、人文感柔软，适合长文随笔。",
-        },
-        {
-          themePreset: "brutalist",
-          title: "野兽派",
-          description: "粗边框、高反差，适合有态度的个人站点。",
-        },
-      ],
-
-      // ── Content ──
       contentEyebrow: "博客",
       contentTitle: "最新文章",
 
-      // ── Creator ──
-      creatorEyebrow: "出品方",
-      creatorTitle: "由 MakerJackie 持续维护。",
-      creatorBody: "这里展示 01MVP 的 AI 建站方法、Jackie 的作品，以及可复用的 TanStack 全栈模板。",
-      creatorPrimaryCta: "查看 TanStack 全栈模板",
-      creatorSecondaryCta: "了解 Jackie",
-      creatorSpotlights: [
+      // ── Diagnosis ──
+      diagnosisEyebrow: "诊断",
+      diagnosisTitle: "通孔产线在悄悄烧钱的五个信号。",
+      diagnosisBody:
+        "手工插件区看上去安静有序，恰恰是最贵的那种安静——错件、产能天花板和工资上涨同时发生，只是没人给你发账单。",
+      diagnosisPoints: [
         {
-          title: "Jackie / MakerJackie",
+          icon: LayersIcon,
+          title: "一块板 10 个以上插装点",
+          description: "每个工位每天重复上千次同样的捏取动作——这正是机器最擅长的那部分。",
+        },
+        {
+          icon: CheckIcon,
+          title: "极性靠老师傅的记性",
+          description: "反插的电容逃过目检、死在 ICT 或客户端，单颗返工成本是插件工位日薪的十倍。",
+        },
+        {
+          icon: TruckIcon,
+          title: "旺季只能加人，加人却不增产",
+          description: "手工工位的产能天花板由手速决定；自动插装的天花板由飞达速度决定。",
+        },
+        {
+          icon: CogIcon,
+          title: "每款新品都要重新培训",
+          description: "换型靠人带人；编带与飞达换型只要几分钟，而且不会忘记。",
+        },
+        {
+          icon: WrenchIcon,
+          title: "备件被供应商牵着走",
+          description: "飞达、吸嘴、钛爪等易损件没有兼容替代与本地响应，停机就是纯损失。",
+        },
+      ],
+
+      // ── Pillars ──
+      pillarsEyebrow: "为什么记住我",
+      pillarsTitle: "三个标签，一个 Jason Wu。",
+      pillarsBody: "算法和工程师需要同时记住我，所以我不做面面俱的人设，只做三件可验证的事。",
+      pillars: [
+        {
+          title: "专业能力：SMT/THT 组装自动化",
           description:
-            "独立开发者，前 AI 算法工程师，周周黑客松社区发起人，长期记录 AI 创作、产品实验和可复用模板。",
-          href: "https://makerjackie.com",
-          cta: "查看作品",
-          icon: UserRoundIcon,
+            "专注 PCB 组装自动化设备方案——立式、异形件、PIN 眼端子插装，波峰焊与周边转运，从单机到整线。",
+          icon: CogIcon,
         },
         {
-          title: "01MVP 实战手册",
-          description: "从想法、MVP、上线到迭代，围绕真实交付整理 AI 产品实战方法。",
-          href: "https://01mvp.com",
-          cta: "访问 01MVP",
-          icon: BookOpenIcon,
-        },
-        {
-          title: "TanStack 全栈模板",
+          title: "通用品质：勤奋、热爱、真诚、技术底子",
           description:
-            "基于 TanStack Start 的全栈产品模板，适合用 AI 快速搭建 SaaS、工具站和可上线应用。",
-          href: "https://01mvp.com/template",
-          cta: "查看模板",
-          icon: RocketIcon,
+            "30 多年从产线装机调试做起，参数只报真实值；写下来的每一篇笔记都来自真实项目。",
+          icon: CheckIcon,
         },
-      ] satisfies CreatorSpotlight[],
-      poweredByLabel: "Powered by",
-      creatorCreditLabel: "创作者",
+        {
+          title: "全球 EMS 的实战语境",
+          description:
+            "客户横跨北美、欧洲、拉美与东南亚，不同安全法规、不同用工成本，同一套工程方法。",
+          icon: GlobeIcon,
+        },
+      ],
+
+      // ── Scenes ──
+      scenesEyebrow: "工作场景",
+      scenesTitle: "你在什么场合见到我？",
+      scenesBody: "四个固定场景，覆盖从选型到量产的整个生命周期。",
+      scenesCta: "订阅 YouTube 直播",
+      scenesPoints: [
+        {
+          title: "现场售后服务",
+          description: "装机、调试、培训、排障——我本人常年在客户产线上，不只是工程师去。",
+          icon: WrenchIcon,
+        },
+        {
+          title: "远程技术指导",
+          description: "WhatsApp/TeamViewer 在线支持，备件与参数问题当天给结论。",
+          icon: MessageCircleIcon,
+        },
+        {
+          title: "视频会议",
+          description: "15 分钟产线评估电话开始，PCB 文件与元件清单投屏过一遍。",
+          icon: VideoIcon,
+        },
+        {
+          title: "售前方案评估",
+          description: "用你的元件在我们的机器上跑演示直播，附 ROI 评估报告。",
+          icon: PlayIcon,
+        },
+      ],
+
+      // ── Framework ─
+      frameworkEyebrow: "方法论",
+      frameworkTitle: "从手工到自动，五步走，不跳步。",
+      frameworkBody:
+        "这套流程我在几十个 EMS 项目里反复用过：先算账，再看料，后看机。任何一步答不上来，就说明还不到买设备的阶段。",
+      setupPaths: [
+        {
+          title: "看你的元件跑直播演示",
+          description: "把 PCB 文件和元件样品寄给我们，YouTube 直播上机跑给你看，附评估报告。",
+          cta: "WhatsApp 预约",
+          href: WHATSAPP_URL,
+          icon: PlayIcon,
+        },
+        {
+          title: "下载可行性检查表",
+          description: "先自查插装点、极性与换型数据，10 分钟知道该不该自动化。",
+          cta: "获取检查表",
+          href: "https://file.autoinsertion.com/public/Blog%20file/auto-insertion-readiness-checklist.pdf",
+          icon: FileTextIcon,
+        },
+      ],
+      frameworkSteps: [
+        {
+          number: "01",
+          title: "盘点插装工序",
+          description: "列出每块板的插装点、元件形态（编带/散装/管装）与现有节拍。",
+        },
+        {
+          number: "02",
+          title: "算清人工与逃逸成本",
+          description: "插点数 × 板数 × 工资，加上错件返工成本——这是自动化的分母。",
+        },
+        {
+          number: "03",
+          title: "用你的元件做样机演示",
+          description: "寄样上机，直播验证速度、极性与打弯质量，不拿别人的板子糊弄你。",
+        },
+        {
+          number: "04",
+          title: "出评估报告与 ROI",
+          description: "CPH、精度、占地、回本周期写成一页纸，你拿去说服厂长和财务。",
+        },
+        {
+          number: "05",
+          title: "单台试点，再扩到整线",
+          description: "先上一台插件机验证 90 天，跑通后再串起多工位与波峰焊联动。",
+        },
+      ],
+
+      // ── Free / Vehicle ──
+      freeEyebrow: "免费动作",
+      freeTitle: "先免费看演示，再谈买设备。",
+      freeBody:
+        "我把售前动作标准化成了免费产品：直播演示 + 评估报告。你付出的只有寄样品的运费，得到的是一份可以自己复用的判断依据。",
+      freeHighlights: [
+        {
+          icon: PlayIcon,
+          label: "Demo 直播",
+          body: "你的元件在我们的插件机上跑，YouTube 直播或闭门会议任选，全程录像。",
+        },
+        {
+          icon: FileTextIcon,
+          label: "评估报告",
+          body: "速度、精度、极性验证、换型时间与 ROI 测算，一页纸交付。",
+        },
+        {
+          icon: CheckIcon,
+          label: "选型建议",
+          body: "即使最后你决定不买自动插件机，报告也会写明为什么——这条规则从没破过。",
+        },
+      ],
+      commitments: [
+        {
+          service: "询盘响应",
+          quota: "2 小时内",
+          note: "工作时间内邮件与 WhatsApp 同标准。",
+        },
+        {
+          service: "初步方案与报价",
+          quota: "当天给出",
+          note: "基于你提供的 PCB 与元件清单。",
+        },
+        {
+          service: "问题解决方案",
+          quota: "3 天内",
+          note: "现场或远程排障后跟踪到关闭。",
+        },
+        {
+          service: "备件与技术支持",
+          quota: "全球发货",
+          note: "飞达、吸嘴、钛爪等易损件常备库存。",
+        },
+      ],
+
+      // ── Products ──
+      productsEyebrow: "产品线",
+      productsTitle: "记住这些型号，就像记住同事的名字。",
+      productBadges,
+
+      // ── Contact ──
+      contactEyebrow: "下一步",
+      contactTitle: "把你的 PCB 文件发过来。",
+      contactBody:
+        "15 分钟视频评估，或者直接寄样品。回复邮件时请附上板子尺寸、插装点数量与元件形态，方案会更有把握。",
+      contactPrimaryCta: "WhatsApp 联系",
+      contactSecondaryCta: "info@smthelp.com",
+      contactSpotlights: [
+        {
+          title: "LinkedIn",
+          description: "每天一条产线现场与行业思考，欢迎工程师互关。",
+          href: "https://cn.linkedin.com/in/smtsupplier",
+          cta: "加好友",
+          icon: FileTextIcon,
+        },
+        {
+          title: "YouTube · Smthelping",
+          description: "设备演示、直播答疑与安装教程都在这条频道。",
+          href: "https://www.youtube.com/c/Smthelping",
+          cta: "订阅",
+          icon: PlayIcon,
+        },
+        {
+          title: "目录与手册库",
+          description: "file.autoinsertion.com 全站目录、手册与实拍图。",
+          href: "https://file.autoinsertion.com",
+          cta: "浏览",
+          icon: LayersIcon,
+        },
+      ] satisfies ContactSpotlight[],
     };
   }
 
-  // ── English ──
+  // ── English ─
   return {
-    eyebrow: "Personal blog system · Cloudflare-hosted · automated deploy",
-    heroTitle: "Build your permanent home on the internet",
+    eyebrow: "Jason Wu · Southern Machinery, Shenzhen — since 2011",
+    heroTitle: "Your SMT line is automated. Your through-hole line still runs on hands.",
     heroBody:
-      "01mvp-blog-starter is a Cloudflare-native personal blog system. Writing dashboard, comments, image hosting, and RSS ship out of the box, and the setup flow can take it from configuration to live deploy.",
-    primaryCta: "Start AI setup",
-    secondaryCta: "View blog demo",
+      'I have spent 30+ years on SMT/THT equipment. This site has one job: turn radial, odd-form, and pin/eyelet auto insertion from "someday" into next month\'s production plan. Watch the machines, read the field notes, or send me your PCB file.',
+    primaryCta: "Book a 15-min line review",
+    secondaryCta: "Read the field notes",
+    trustLine:
+      "Equipment and support delivered to EMS plants producing for Signify, Flex, Schneider Electric, Kimball International, and Fideltronik.",
+    heroImageAlt:
+      "S4040A/S3020A/S7020/S7040 axial, radial, terminal and odd-form insertion inline line with loader",
 
-    // ── Why Free ──
-    freeEyebrow: "Cost boundary",
-    freeTitle: "No server. No renewal fees.",
-    freeBody:
-      "Cloudflare's free tier is effectively more than enough for a personal blog. Configure it on day one, then stop thinking about servers, databases, and storage.",
-    freeHighlights: [
-      {
-        icon: ServerIcon,
-        label: "No server required",
-        body: "Runs on Cloudflare Workers — 100K free requests per day. A personal blog will never come close.",
-      },
-      {
-        icon: GlobeIcon,
-        label: "Built-in URL",
-        body: "A free *.workers.dev subdomain is included for testing. For mainland China readers, bind your own domain; long-term high-volume access may need filing work.",
-      },
-      {
-        icon: ShieldCheckIcon,
-        label: "Mature infrastructure",
-        body: "Workers, D1, and R2 are hosted by Cloudflare, so you do not maintain VPS, database, or object storage infrastructure.",
-      },
-    ] as (FreeHighlight & { icon: LucideIcon })[],
-
-    // ── Your Own Corner ──
-    ownershipEyebrow: "Content ownership",
-    ownershipTitle: "Your content, truly yours.",
-    ownershipBody:
-      "Platform accounts can be suspended anytime. Content can be deleted without warning. A personal site is an internet asset you actually own.",
-    ownershipPoints: [
-      {
-        icon: LockKeyholeIcon,
-        title: "No platform control",
-        description:
-          "Platforms decide what you can post, when you get pushed, and when you get banned. On your own site, you set the rules.",
-      },
-      {
-        icon: PencilIcon,
-        title: "Write what you actually want",
-        description:
-          "Link out freely, share contact info, critique competitors — none of the restrictions that come with publishing on someone else's platform.",
-      },
-      {
-        icon: Share2Icon,
-        title: "Blog as hub, platforms as outlets",
-        description:
-          "Write once on your blog, then use multipost or AI to syndicate to each platform in its own voice.",
-      },
-    ] as { title: string; description: string; icon: LucideIcon }[],
-
-    // ── Core Features ──
-    featuresEyebrow: "Core features",
-    featuresTitle: "A full dynamic publishing system for a living blog.",
-    featuresBody:
-      "Real database, real admin panel, built-in comments and media management — all on Cloudflare's free tier.",
-    features: [
-      {
-        title: "Writing dashboard",
-        description: "Markdown editor, tags, covers, scheduled publishing — all in /admin.",
-        icon: BookOpenIcon,
-      },
-      {
-        title: "Image hosting (R2)",
-        description:
-          "Images, imports, exports, and backups. Activation usually requires a payment method; small personal sites usually stay inside the free tier.",
-        icon: CloudIcon,
-      },
-      {
-        title: "Comments",
-        description:
-          "Self-hosted on D1. Moderation queue, Cloudflare Turnstile spam protection — no Disqus required.",
-        icon: MessageSquareTextIcon,
-      },
-      {
-        title: "AI-customizable",
-        description:
-          "Open-source template. Use Cursor, Claude Code, or any AI tool to restyle or extend it however you like.",
-        icon: SparklesIcon,
-      },
-      {
-        title: "Multi-platform distribution",
-        description:
-          "Use multipost to sync posts to other platforms. Your blog is the source; social channels are outlets.",
-        icon: Share2Icon,
-      },
-      {
-        title: "Export and migrate",
-        description: "Posts, images, comments, and settings are all exportable. No lock-in.",
-        icon: ArchiveIcon,
-      },
-    ],
-
-    obsidianEyebrow: "Git Markdown workflow",
-    obsidianTitle: "Publish Obsidian-style Markdown as blog posts.",
-    obsidianBody:
-      "Put selected Markdown / MDX files under content/notes and publish them through GitHub or your deploy flow. Only files with publish: true become public posts, and they still use tags, RSS, comments, and site search.",
-    obsidianCta: "Read the Markdown guide",
-    obsidianPoints: [
-      {
-        title: "Write in any folder structure",
-        description:
-          "Put files under content/notes and organize them however you like. The site ignores folders and groups public posts by tags and publish time.",
-        icon: FilesIcon,
-      },
-      {
-        title: "Image references are handled",
-        description:
-          "Supports ![[image.png]] and standard Markdown image links. Images found in the vault are uploaded to R2 and rewritten automatically.",
-        icon: ImageIcon,
-      },
-      {
-        title: "Git-backed publish and hide",
-        description:
-          "Deployment sync records source paths and content hashes. Remove publish: true or delete the source file, and the public post is hidden on the next sync.",
-        icon: GitBranchIcon,
-      },
-    ] satisfies FeatureItem[],
-
-    // ── Automation ──
-    skillEyebrow: "Automated setup",
-    skillTitle: "Give the template to AI in either of two ways.",
-    skillBody:
-      "Install the 01mvp-blog Skill for the best long-term flow, or copy the setup prompt from the docs. AI creates Cloudflare resources, writes config, runs migrations, and deploys; you only handle account, domain, and payment confirmations.",
-    setupPaths: [
-      {
-        title: "Install the 01mvp-blog Skill",
-        description:
-          "Best for repeated use. Setup commands, Cloudflare provisioning, and verification checks can keep improving with the Skill.",
-        cta: "Read install steps",
-        icon: SparklesIcon,
-      },
-      {
-        title: "Copy the AI setup prompt",
-        description:
-          "Best for quick trials. Paste the full prompt into Codex, Claude Code, or Cursor and let AI follow the same workflow.",
-        cta: "Copy the prompt",
-        icon: FileTextIcon,
-      },
-    ] satisfies SetupPath[],
-    skillSteps: [
-      {
-        number: "01",
-        title: "Install Cloudflare access",
-        description:
-          "Connect your Cloudflare account inside Codex, Claude Code, Cursor, or another AI coding agent.",
-      },
-      {
-        number: "02",
-        title: "Fork or clone the template",
-        description:
-          "Start from 01MVP/blog-starter, or let AI create a fresh GitHub repository for your blog.",
-      },
-      {
-        number: "03",
-        title: "Let AI initialize the site",
-        description:
-          "Creates D1, KV, R2, and Worker resources, writes config, runs migrations, and deploys.",
-      },
-      {
-        number: "04",
-        title: "Handle manual confirmations",
-        description:
-          "Cloudflare login, payment-method confirmation, nameservers, OAuth apps, or email verification.",
-      },
-    ],
-
-    // ── Merged quota (rendered inline, no heading needed) ──
-    quotaEyebrow: "",
-    quotaTitle: "",
-    quotaBody: "",
-    quotaItems: [
-      {
-        service: "Workers",
-        quota: "100,000 requests / day",
-        note: "Personal blogs typically use a tiny fraction of this.",
-      },
-      {
-        service: "D1 database",
-        quota: "5 GB + 5M reads / day",
-        note: "Posts, comments, settings — enough for years.",
-      },
-      {
-        service: "R2 image storage",
-        quota: "10 GB, free egress",
-        note: "Images, imports, exports, and backups; payment-method confirmation is usually needed.",
-      },
-      {
-        service: "KV cache",
-        quota: "100K reads / day, 1 GB",
-        note: "Page caching for faster load times.",
-      },
-    ],
-
-    // ── Tech Stack ──
-    techEyebrow: "Tech stack",
-    techTitle: "Cloudflare-native · Modern full-stack · AI-friendly",
-    techItems,
-
-    // ── Theme ──
-    themeEyebrow: "Built-in styles",
-    themeTitle: "Four presets. Customize freely with AI.",
-    themeBody:
-      "Default is minimal monochrome. Switch presets in one line — or use your AI tool to build something entirely different.",
-    themePreviews: [
-      {
-        themePreset: "maker",
-        title: "Monochrome",
-        description: "Pure black and white, sharp corners, maximum contrast for technical writing.",
-      },
-      {
-        themePreset: "apple",
-        title: "Apple Rounded",
-        description: "Blue primary, larger radius, softer borders for calm product docs.",
-      },
-      {
-        themePreset: "editorial",
-        title: "Warm Editorial",
-        description: "Warm cream-orange, soft and humanistic, for essays and reflective posts.",
-      },
-      {
-        themePreset: "brutalist",
-        title: "Brutalist",
-        description: "Thick borders, high contrast, bold accent for expressive personal sites.",
-      },
-    ],
-
-    // ── Content ──
     contentEyebrow: "Blog",
     contentTitle: "Latest posts",
 
-    // ── Creator ──
-    creatorEyebrow: "Made by",
-    creatorTitle: "Maintained by MakerJackie.",
-    creatorBody:
-      "Explore 01MVP's AI website workflow, Jackie's projects, and the reusable TanStack full-stack template.",
-    creatorPrimaryCta: "View TanStack template",
-    creatorSecondaryCta: "Meet Jackie",
-    creatorSpotlights: [
+    // ── Diagnosis ──
+    diagnosisEyebrow: "Diagnosis",
+    diagnosisTitle: "Five signs your through-hole line is quietly burning money.",
+    diagnosisBody:
+      "A manual insertion area looks calm. That is the expensive kind of calm — escapes, capacity ceilings, and wage inflation happening at the same time, with nobody sending you the invoice.",
+    diagnosisPoints: [
       {
-        title: "Jackie / MakerJackie",
+        icon: LayersIcon,
+        title: "10+ insertion points per board",
         description:
-          "Independent developer, former AI algorithm engineer, founder of Hackathon Weekly, and publisher of AI product experiments and reusable templates.",
-        href: "https://makerjackie.com",
-        cta: "View projects",
-        icon: UserRoundIcon,
+          "Each station repeats the same pinch-and-place thousands of times a shift — exactly the motion a machine was built for.",
       },
       {
-        title: "01MVP handbook",
+        icon: CheckIcon,
+        title: "Polarity lives in veterans' memory",
         description:
-          "A practical guide from idea, MVP, launch, and feedback to the next product iteration.",
-        href: "https://01mvp.com",
-        cta: "Visit 01MVP",
-        icon: BookOpenIcon,
+          "One reversed capacitor that survives visual inspection and dies at ICT or at the customer costs far more than an inserter's daily wage.",
       },
       {
-        title: "TanStack full-stack template",
+        icon: TruckIcon,
+        title: "Peak season means hiring, not throughput",
         description:
-          "A TanStack Start full-stack product template for shipping SaaS apps, tools, and AI-built products.",
-        href: "https://01mvp.com/template",
-        cta: "View template",
-        icon: RocketIcon,
+          "Manual capacity is capped by hands. Automated capacity is capped by feeder speed — a much higher ceiling.",
       },
-    ] satisfies CreatorSpotlight[],
-    poweredByLabel: "Powered by",
-    creatorCreditLabel: "Created by",
+      {
+        icon: CogIcon,
+        title: "Every new product retrains every hand",
+        description:
+          "Changeover by memory is fragile. Taped components and feeders change over in minutes and never forget.",
+      },
+      {
+        icon: WrenchIcon,
+        title: "Spare parts held hostage",
+        description:
+          "Feeders, nozzles, and wave-soldering fingers without compatible alternatives and fast support turn downtime into pure loss.",
+      },
+    ],
+
+    // ── Pillars ──
+    pillarsEyebrow: "Why remember me",
+    pillarsTitle: "Three tags, one Jason Wu.",
+    pillarsBody:
+      "Algorithms and engineers both need a reason to remember you. So no all-purpose persona — just three verifiable things.",
+    pillars: [
+      {
+        title: "Expertise: SMT & THT assembly automation",
+        description:
+          "PCB assembly automation solutions — radial, odd-form, pin/eyelet/terminal insertion, wave soldering and board handling, from single machines to full lines.",
+        icon: CogIcon,
+      },
+      {
+        title: "Character: diligent, passionate, sincere, deeply technical",
+        description:
+          "Thirty years starting from machine installation and commissioning on real floors. Specs are reported as measured, and every note here comes from a real project.",
+        icon: CheckIcon,
+      },
+      {
+        title: "Context: global EMS reality",
+        description:
+          "Customers across North America, Europe, Latin America, and Southeast Asia — different safety regulations, different labor costs, one engineering method.",
+        icon: GlobeIcon,
+      },
+    ],
+
+    // ── Scenes ──
+    scenesEyebrow: "Where you meet me",
+    scenesTitle: "Four scenes, from selection to production.",
+    scenesBody:
+      "The same person who quotes your machine also stands on your floor when it arrives.",
+    scenesCta: "Subscribe on YouTube",
+    scenesPoints: [
+      {
+        title: "On-site after-sales service",
+        description:
+          "Installation, commissioning, training, troubleshooting — I am on customer lines myself, not just sending an engineer.",
+        icon: WrenchIcon,
+      },
+      {
+        title: "Remote technical guidance",
+        description:
+          "WhatsApp and remote-desktop support; spare-part and parameter questions get an answer the same day.",
+        icon: MessageCircleIcon,
+      },
+      {
+        title: "Video conferences",
+        description:
+          "Start with a 15-minute line review — your PCB file and component list on screen, my notes beside it.",
+        icon: VideoIcon,
+      },
+      {
+        title: "Pre-sales solution evaluation",
+        description:
+          "Your components, our machines, live on camera — plus a written evaluation report with ROI.",
+        icon: PlayIcon,
+      },
+    ],
+
+    // ── Framework ─
+    frameworkEyebrow: "The method",
+    frameworkTitle: "Manual to automated in five steps. No skipping.",
+    frameworkBody:
+      "I have run this loop on dozens of EMS projects: count first, then inspect parts, then look at machines. If any step cannot be answered, you are not ready to buy equipment yet — and I will say so.",
+    setupPaths: [
+      {
+        title: "Watch your components run live",
+        description:
+          "Send the PCB file and component samples. We run them on camera on YouTube or in a private session, with an evaluation report.",
+        cta: "Book on WhatsApp",
+        href: WHATSAPP_URL,
+        icon: PlayIcon,
+      },
+      {
+        title: "Download the readiness checklist",
+        description:
+          "Self-check insertion points, polarity, and changeover data — know in 10 minutes whether automation makes sense.",
+        cta: "Get the checklist",
+        href: "https://file.autoinsertion.com/public/Blog%20file/auto-insertion-readiness-checklist.pdf",
+        icon: FileTextIcon,
+      },
+    ],
+    frameworkSteps: [
+      {
+        number: "01",
+        title: "Map the insertion steps",
+        description:
+          "List insertion points per board, component formats (taped, bulk, tube), and current takt time.",
+      },
+      {
+        number: "02",
+        title: "Count labor and escape cost",
+        description:
+          "Insertion moves x boards x wages, plus rework from wrong parts — that is the denominator of automation.",
+      },
+      {
+        number: "03",
+        title: "Demo with YOUR components",
+        description:
+          "Samples on our machines, verified on camera for speed, polarity, and clinch quality. No stock videos of other people's boards.",
+      },
+      {
+        number: "04",
+        title: "Evaluation report and ROI",
+        description:
+          "CPH, accuracy, footprint, and payback window on one page — the page you take to your plant manager and finance.",
+      },
+      {
+        number: "05",
+        title: "Pilot one machine, then scale",
+        description:
+          "Run one inserter for 90 days, prove it, then extend into multi-station lines with wave soldering handoff.",
+      },
+    ],
+
+    // ── Free / Vehicle ──
+    freeEyebrow: "Free by design",
+    freeTitle: "See the demo first. Buy the machine later.",
+    freeBody:
+      "I turned my pre-sales motion into a free product: live demo plus evaluation report. You pay only the shipping of your samples; you keep a judgment you can reuse — with or without buying from me.",
+    freeHighlights: [
+      {
+        icon: PlayIcon,
+        label: "Live demo",
+        body: "Your components run on our insertion machines, streamed on YouTube or in a closed session, fully recorded.",
+      },
+      {
+        icon: FileTextIcon,
+        label: "Evaluation report",
+        body: "Speed, accuracy, polarity verification, changeover time, and ROI math — delivered on one page.",
+      },
+      {
+        icon: CheckIcon,
+        label: "Honest selection advice",
+        body: 'Even when the answer is "stay manual for now", the report says so. That rule has never been broken.',
+      },
+    ],
+    commitments: [
+      {
+        service: "Inquiry reply",
+        quota: "Within 2 hours",
+        note: "Same standard for email and WhatsApp during working hours.",
+      },
+      {
+        service: "First proposal & quote",
+        quota: "Same day",
+        note: "Based on the PCB and component list you provide.",
+      },
+      {
+        service: "Problem resolution plan",
+        quota: "Within 3 days",
+        note: "On-site or remote, tracked until closed.",
+      },
+      {
+        service: "Spare parts & support",
+        quota: "Ships worldwide",
+        note: "Feeders, nozzles, wave soldering fingers and other consumables in stock.",
+      },
+    ],
+
+    // ── Products ──
+    productsEyebrow: "Product lines",
+    productsTitle: "Know the model numbers like colleagues' names.",
+    productBadges,
+
+    // ── Contact ──
+    contactEyebrow: "Next step",
+    contactTitle: "Send me your PCB file.",
+    contactBody:
+      "A 15-minute video review, or ship the samples. When you write, include board size, insertion points per board, and component formats — the proposal gets sharper with every number.",
+    contactPrimaryCta: "Chat on WhatsApp",
+    contactSecondaryCta: "info@smthelp.com",
+    contactSpotlights: [
+      {
+        title: "LinkedIn",
+        description: "A daily note from the line — engineers welcome to connect.",
+        href: "https://cn.linkedin.com/in/smtsupplier",
+        cta: "Connect",
+        icon: FileTextIcon,
+      },
+      {
+        title: "YouTube · Smthelping",
+        description: "Machine demos, live Q&A, and installation guides.",
+        href: "https://www.youtube.com/c/Smthelping",
+        cta: "Subscribe",
+        icon: PlayIcon,
+      },
+      {
+        title: "Catalog & manuals library",
+        description: "Every catalog, manual, and real machine photo at file.autoinsertion.com.",
+        href: "https://file.autoinsertion.com",
+        cta: "Browse",
+        icon: LayersIcon,
+      },
+    ] satisfies ContactSpotlight[],
   };
 }
