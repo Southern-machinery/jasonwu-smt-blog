@@ -10,9 +10,11 @@ import {
   WrenchIcon,
 } from "lucide-react";
 
+import { ProjectCaseCard } from "#/components/project-case-card";
 import { SiteShell } from "#/components/site-shell";
 import { $getAboutPageData } from "#/lib/cms-server";
 import { getCurrentLocale } from "#/lib/i18n";
+import { PROJECT_CASES } from "#/lib/project-cases";
 
 export const Route = createFileRoute("/about")({
   loader: () => $getAboutPageData(),
@@ -166,6 +168,18 @@ function AboutPage() {
                 </article>
               ))}
             </div>
+
+            <div className="mt-12">
+              <p className="text-sm font-semibold text-link uppercase">{copy.recordsEyebrow}</p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                {copy.recordsBody}
+              </p>
+              <div className="mt-6 grid gap-px border border-border bg-border">
+                {PROJECT_CASES.map((item) => (
+                  <ProjectCaseCard key={item.id} projectCase={item} />
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -281,9 +295,12 @@ function getAboutCopy(locale: ReturnType<typeof getCurrentLocale>) {
         },
       ],
       casesEyebrow: "精选项目",
-      casesTitle: "写在档案里的两个交付。",
+      casesTitle: "写在档案里的 22 个项目。",
       casesBody:
         "以下项目与数据发布在我的 LinkedIn 档案（linkedin.com/in/smtsupplier），可向客户与同事核实。",
+      recordsEyebrow: "项目实录",
+      recordsBody:
+        "另有二十份脱敏交付记录，覆盖异形插件、定制飞达、分板、波峰焊耗材、ESD 转运与 AGV 物料周转。客户名称、价格与合同件号一律隐去；每条日期与数字均出自项目系统，并注明其计量依据。记录保留项目系统原文（英文），以免翻译造成规格失真。",
       cases: [
         {
           kind: "THT 自动插件线",
@@ -387,9 +404,12 @@ function getAboutCopy(locale: ReturnType<typeof getCurrentLocale>) {
       },
     ],
     casesEyebrow: "Selected projects",
-    casesTitle: "Two deliveries on the record.",
+    casesTitle: "Twenty-two projects on the record.",
     casesBody:
       "These projects and figures are published on my LinkedIn profile (linkedin.com/in/smtsupplier) — verifiable, not anonymous claims.",
+    recordsEyebrow: "Field records",
+    recordsBody:
+      "Twenty desensitised delivery records covering odd-form insertion, engineered feeders, depanelizing, wave soldering consumables, ESD handling and AGV material handling. Customer names, pricing and contract part numbers are withheld at source; every date and figure comes from the project system, and each metric states what it was recorded against.",
     cases: [
       {
         kind: "THT auto insertion line",
