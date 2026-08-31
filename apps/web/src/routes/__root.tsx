@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState, useTransition } from "react";
 
+import { AnthemPlayer } from "#/components/anthem-player";
 import { getCurrentLocale } from "#/lib/i18n";
 import { m } from "#/paraglide/messages.js";
 
@@ -195,6 +196,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
         <ThemeProvider>
           {children}
           <Toaster richColors />
+          <AnthemPlayer />
         </ThemeProvider>
 
         {import.meta.env.DEV ? <DevToolsWrapper /> : null}
